@@ -26,28 +26,29 @@
 \subsection{Alphabet}
 On appelle $\Sigma$ un alphabet dont les éléments sont appelés des lettres. \\
 Un mot sur $\Sigma$ est un $n$-uplet de lettres : $m = (a_1,\ a_2,\ ...,\ a_n)$. \\
-L'ensemble des mots sur $\Sigma$ est noté $\Sigma^* := {m \in \Sigma^n,\ \forall n \in \mathbb{N}}$. \\
+L'ensemble des mots sur $\Sigma$ est noté $\Sigma^* := \{m \in \Sigma^n,\ \forall n \in \mathbb{N}\}$. \\
 Soit $m = (a_1,\ a_2,\ ...,\ a_n)$ un mot, on appelle longueur du mot $m$ notée $|m|$ l'entier $n$. \\
 Enfin, on note $\varepsilon$ le mot vide (unique mot de longueur $0$). \\ \\
 On peut munir $\Sigma^*$ d'une loi de composition interne, la concaténation $+$ : \\
 $(a_1,\ ...,\ a_n)+(b_1,\ ...,\ a_n) = (a_1,\ ...,\ a_n,\ b_1,\ ...,\ a_n)$. \\
-On observe alors que $(\Sigma^*, +)$ est un monoïde.
+On observe alors que $(\Sigma^*,\ +)$ est un monoïde.
 
 \subsection{Arbre binaire}
-Soit $E$ un ensemble, on appelle alors $a$ un arbre binaire sur $E$ un triplet $(G, x, D)$ avec $x$ un élement de $E$ et $G, D$ des arbres binaires. \\
+Soit $E$ un ensemble, on appelle alors $A$ un arbre binaire sur $E$ un triplet $(G, x, D)$ avec $x$ un élement de $E$ et $G$, $D$ des arbres binaires. \\
 On le définit par récurrence ainsi :
 \begin{itemize}
-\item L'arbre vide, noté $a_0$, est un arbre binaire,
-\item Pour tout G, D arbres binaires, pour tout $x \in E$, $(G,\ x,\ D)$ est un arbre binaire.
+\item L'arbre vide, noté $A_0$, est un arbre binaire,
+\item Pour tout $G$, $D$ arbres binaires, pour tout $x \in E$, $(G,\ x,\ D)$ est un arbre binaire.
 \end{itemize}
-On dit que $G$ (resp. $D$) est le sous arbre gauche (resp. droit) de $a = (G,\ x,\ D)$ noté $g(a)$ (resp. $d(a)$). $x$ est le noeud de $a$, noté $n(a)$. \\
-On note aussi $\mathcal{A}_E$ l'ensemble des arbres binaires sur $E$.
+On dit que $G$ (resp. $D$) est le sous arbre gauche (resp. droit) de $A = (G,\ x,\ D)$ noté $g(A)$ (resp. $d(A)$). $x$ est le nœud de $A$, noté $n(A)$. \\
+On note aussi $\mathcal{A}_E$ l'ensemble des arbres binaires sur $E$. \\ \\
+(ALERTE ! Mal défini car $n(A_0), g(A_0), d(A_0)$ n'ont pas encore de sens !!)
 
 \subsection{Arbre de Huffman}
-On appelle arbre de Huffman un arbre binaire $a$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
+On appelle arbre de Huffman un arbre binaire $A$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
 \begin{itemize}
-\item $n(a) = n(g(a))+n(d(a))$,
-\item $g(a)$ et $d(a)$ sont tous deux des arbres de Huffman,
+\item $n(A) = n(g(A))+n(d(A))$,
+\item $g(A)$ et $d(A)$ sont tous deux des arbres de Huffman,
 \item ... (il manque un truc ici, à faire !).
 \end{itemize}
 On note $\mathcal{H}$ l'ensemble des arbres de Huffman et on a $\mathcal{H} \subset \mathcal{A}_\mathbb{N}$.
@@ -57,15 +58,15 @@ Intuitivement, on aimerait définir des classes d'équivalences des arbres de Hu
 $$
 \begin{matrix}
 \omega: &\mathcal{H} &\rightarrow &\mathbb{N} \\
-&a &\mapsto &{\begin{cases}
-	0 \text{ si } a = a_0 \\    
-	n(a)+\omega(g(a))+\omega(d(a)) \text{ sinon}
+&A &\mapsto &{\begin{cases}
+	0 \text{ si } A = A_0 \\    
+	n(A)+\omega(g(A))+\omega(d(A)) \text{ sinon}
 \end{cases}}
 \end{matrix} \\
 $$
-Nous pouvons à présent définir $\mathcal{R}$ notre relation d'équivalence. Soient $a, b \in \mathcal{H}$, on a alors
+Nous pouvons à présent définir $\mathcal{R}$ notre relation d'équivalence. Soient $A, B \in \mathcal{H}$, on a alors
 $$
-a \mathcal{R} b \iff \omega(a) = \omega(b)
+A \mathcal{R} B \iff \omega(A) = \omega(B)
 $$
 On dénote également $\overline{\mathcal{H}} := \mathcal{H}/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}$ par $\mathcal{R}$.
 
