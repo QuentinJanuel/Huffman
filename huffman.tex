@@ -34,15 +34,13 @@ $(a_1,\ ...,\ a_n)+(b_1,\ ...,\ a_n) = (a_1,\ ...,\ a_n,\ b_1,\ ...,\ a_n)$. \\
 On observe alors que $(\Sigma^*,\ +)$ est un monoïde.
 
 \subsection{Arbre binaire}
-Soit $E$ un ensemble, on appelle alors $A$ un arbre binaire sur $E$ un triplet $(G, x, D)$ avec $x$ un élement de $E$ et $G$, $D$ des arbres binaires. \\
-On le définit par récurrence ainsi :
-\begin{itemize}
-\item L'arbre vide, noté $A_0$, est un arbre binaire,
-\item Pour tout $G$, $D$ arbres binaires, pour tout $x \in E$, $(G,\ x,\ D)$ est un arbre binaire.
-\end{itemize}
-On dit que $G$ (resp. $D$) est le sous arbre gauche (resp. droit) de $A = (G,\ x,\ D)$ noté $g(A)$ (resp. $d(A)$). $x$ est le nœud de $A$, noté $n(A)$. \\
-On note aussi $\mathcal{A}_E$ l'ensemble des arbres binaires sur $E$. \\ \\
-(ALERTE ! Mal défini car $n(A_0), g(A_0), d(A_0)$ n'ont pas encore de sens !!)
+Soit $E$ un ensemble, on dit que $A := (Q,\ T)$ est un arbre binaire sur $E$ avec $Q \subset E$ et $T \subset E\times E$ s'il respecte les 3 propriétés suivantes :
+\begin{enumerate}
+\item $\exists \ !\ r \in Q,\ \forall x \in Q,\ (x, r) \notin T$ ($r$ est appelé racine de $A$ noté $r(A)$),
+\item $\forall x_2 \in Q\backslash\{r\},\ \exists \ !\ x_1 \in Q,\ (x_1,\ x_2) \in T$,
+\item $\forall x_1 \in Q,\ \text{card}(\{x_2 \in Q,\ (x_1,\ x_2)\in T\}) \leq 2$.
+\end{enumerate}
+Les éléments de $Q$ sont appelés les états et les éléments de $T$ transitions.
 
 \subsection{Arbre de Huffman}
 On appelle arbre de Huffman un arbre binaire $A$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
