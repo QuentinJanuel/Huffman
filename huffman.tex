@@ -30,17 +30,40 @@ L'ensemble des mots sur $\Sigma$ est noté $\Sigma^* := \{m \in \Sigma^n,\ \fora
 Soit $m = (a_1,\ a_2,\ ...,\ a_n)$ un mot, on appelle longueur du mot $m$ notée $|m|$ l'entier $n$. \\
 Enfin, on note $\varepsilon$ le mot vide (unique mot de longueur $0$). \\ \\
 On peut munir $\Sigma^*$ d'une loi de composition interne, la concaténation $+$ : \\
-$(a_1,\ ...,\ a_n)+(b_1,\ ...,\ a_n) = (a_1,\ ...,\ a_n,\ b_1,\ ...,\ a_n)$. \\
+$(a_1,\ ...,\ a_n)+(b_1,\ ...,\ b_n) = (a_1,\ ...,\ a_n,\ b_1,\ ...,\ b_n)$. \\
 On observe alors que $(\Sigma^*,\ +)$ est un monoïde.
 
 \subsection{Arbre binaire}
-Soit $E$ un ensemble, on dit que $A := (Q,\ T)$ est un arbre binaire sur $E$ avec $Q \subset E$ et $T \subset E\times E$ s'il respecte les 3 propriétés suivantes :
+Soit $E$ un ensemble, on dit que $A := (Q,\ T)$ est un arbre binaire sur $E$ avec $Q \subset E$ et $T \subset E\times \mathbb{F}_2\times E$ s'il respecte les 3 propriétés suivantes :
 \begin{enumerate}
-\item $\exists \ !\ r \in Q,\ \forall x \in Q,\ (x, r) \notin T$ ($r$ est appelé racine de $A$ noté $r(A)$),
-\item $\forall x_2 \in Q\backslash\{r\},\ \exists \ !\ x_1 \in Q,\ (x_1,\ x_2) \in T$,
-\item $\forall x_1 \in Q,\ \text{card}(\{x_2 \in Q,\ (x_1,\ x_2)\in T\}) \leq 2$.
+\item $\exists \ !\ r \in Q,\ \forall (x,\ b) \in Q\times \mathbb{F}_2,\ (x, b, r) \notin T$ ($r$ est appelée racine de $A$ notée $r(A)$),
+\item $\forall x_2 \in Q\backslash\{r\},\ \exists \ !\ (x_1,\ b) \in Q\times \mathbb{F}_2,\ (x_1,\ b,\ x_2) \in T$, % (on dit que $x_1$ est un parent de $x_2$ que l'on note $p(x_2)$),
+\item $\forall (x_1,\ b) \in Q\times \mathbb{F}_2,\ \text{card}(\{x_2 \in Q,\ (x_1,\ b,\ x_2)\in T\}) \leq 1$.
 \end{enumerate}
-Les éléments de $Q$ sont appelés les états et les éléments de $T$ transitions.
+Les éléments de $Q$ (notés $q(A)$) sont appelés les états et les éléments de $T$ (notés $t(A)$) transitions. \\
+Enfin, l'ensemble des arbres binaires sur $E$ est noté $\mathcal{A}_E$.
+
+\subsection{Fonctions gauche et droite d'un arbre binaire}
+Soit $E$ un ensemble, pour tout $b \in \mathbb{F}_2$, on pose
+$$
+S_b := \{A \in \mathcal{A}_E,\ \exists \ x \in q(A),\ (r(A), b, x) \in t(A)\}
+$$
+Cela correspond à l'ensemble des arbres binaires qui ont un sous arbre ou gauche ou droit selon la valeur de $b$. \\
+Ensuite, $\forall A \in S_b$, soit $s_b(A)$ l'unique $x \in q(A)$ tel que $(r(A),\ b,\ x) \in t(A)$. \\
+Finalement, on peut poser
+$$
+\begin{matrix}
+\theta_b: &S_b &\rightarrow &\mathcal{A}_E \\
+&A &\mapsto &A_b
+\end{matrix}
+$$
+avec $A_b$ l'unique arbre binaire tel que
+\begin{gather}
+r(A_b) = s_b(A) \\
+t(A_b) \subset t(A)
+\end{gather}
+Utilisons cette fonction pour définir $g := \theta_0$ et $d := \theta_1$. \\
+Pour synthétiser, $g$ et $d$ sont deux fonctions qui rendent le sous arbre binaire respectivement gauche ou droite, définies uniquement si ce sous arbre existe. \\
 
 \subsection{Arbre de Huffman}
 On appelle arbre de Huffman un arbre binaire $A$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
