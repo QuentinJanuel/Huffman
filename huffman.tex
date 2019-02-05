@@ -4,24 +4,26 @@
 \usepackage[french]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
-
+\usepackage{relsize}
 \let\iff\Longleftrightarrow
-
+\newtheorem{theo}{Théorème}
 \pagestyle{headings}
-
 \title{Huffman}
-\author{Quentin Januel, Loïc Mohin et Anthony Villeneuve}
+\author{
+\textbf{Auteurs :} Quentin Januel, Loïc Mohin et Anthony Villeneuve \\
+\textbf{Mentors :} Olivier Gipouloux et Stéphane Gaussent \\ \\
+\textbf{Fait à :} Université Jean Monnet, Saint Etienne
+}
 \date{\today}
-
 \begin{document}
-
 \maketitle
 \newpage
-
 \tableofcontents{}
 \newpage
 
-\section{Définitions}
+\section{Prérequis}
+
+Dans cette section, nous allons tâcher de définir les outils dont nous aurons besoin pour l'analyse des arbres de Huffman.
 
 \subsection{Alphabet}
 On appelle $\Sigma$ un alphabet dont les éléments sont appelés des lettres. \\
@@ -33,6 +35,14 @@ On peut munir $\Sigma^*$ d'une loi de composition interne, la concaténation $+$
 $(a_1,\ ...,\ a_n)+(b_1,\ ...,\ b_n) = (a_1,\ ...,\ a_n,\ b_1,\ ...,\ b_n)$. \\
 On observe alors que $(\Sigma^*,\ +)$ est un monoïde.
 
+\subsection{Mot pondéré}
+On dit qu'un élement $(a,\ n)\in \Sigma^*\times \mathbb{N}$ est un mot pondéré de $\Sigma$ et on notera :
+\begin{enumerate}
+\item $l((a,\ n)) = a$ ($l$ pour "lettre"),
+\item $p((a,\ n)) = n$ ($p$ pour "poids")
+\end{enumerate}
+On définit alors la somme de mots pondérés $x+y = (l(x)+l(y),\ p(x)+p(y))$ et on se retrouve avec un nouveau monoïde :  $(\Sigma^*\times \mathbb{N},\ +)$.
+
 \subsection{Arbre binaire}
 Soit $E$ un ensemble, on dit que $A := (Q,\ T)$ est un arbre binaire sur $E$ avec $Q \subset E$ et $T \subset E\times \mathbb{F}_2\times E$ s'il respecte les 3 propriétés suivantes :
 \begin{enumerate}
@@ -42,53 +52,103 @@ Soit $E$ un ensemble, on dit que $A := (Q,\ T)$ est un arbre binaire sur $E$ ave
 \end{enumerate}
 Les éléments de $Q$ (notés $q(A)$) sont appelés les états et les éléments de $T$ (notés $t(A)$) transitions. \\
 Enfin, l'ensemble des arbres binaires sur $E$ est noté $\mathcal{A}_E$.
+\newpage
 
-\subsection{Fonctions gauche et droite d'un arbre binaire}
-Soit $E$ un ensemble, pour tout $b \in \mathbb{F}_2$, on pose
+\section{Arbre de Huffman}
+
+\subsection{Définition}
+Prennons un alphabet $\Sigma$ quelconque. Tout arbre de la forme
 $$
-S_b := \{A \in \mathcal{A}_E,\ \exists \ x \in q(A),\ (r(A), b, x) \in t(A)\}
+(\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |x| = 1
 $$
-Cela correspond à l'ensemble des arbres binaires qui ont un sous arbre ou gauche ou droit selon la valeur de $b$. \\
-Ensuite, $\forall A \in S_b$, soit $s_b(A)$ l'unique $x \in q(A)$ tel que $(r(A),\ b,\ x) \in t(A)$. \\
-Finalement, on peut poser
+est appelé arbre de Huffman sur $\Sigma$. \\
+De plus, soient $A$ et $B$ deux arbres de Huffman et $r := r(A)+r(B)$, alors
+$$
+M_{A,\ B} := (q(A) \cup q(B) \cup \{r\},\ t(A)\cup(B)\cup \{(r,\ 0,\ r(A)),\ (r,\ 1,\ r(B))\})
+$$
+est également un arbre de Huffman, on dit que $M$ est la fusion de $A$ et de $
+B$. \\
+Notons $\mathcal{H}_\Sigma$ l'ensemble des arbres de Huffman sur $\Sigma$. \\
+On pose aussi
 $$
 \begin{matrix}
-\theta_b: &S_b &\rightarrow &\mathcal{A}_E \\
-&A &\mapsto &A_b
+m: &\mathcal{H}_\Sigma\times \mathcal{H}_\Sigma &\rightarrow &\mathcal{H}_\Sigma \\
+&(A,\ B) &\mapsto &M_{A,\ B}
 \end{matrix}
 $$
-avec $A_b$ l'unique arbre binaire dont l'ensemble des transitions est aussi grand que possible tel que
-\begin{gather}
-r(A_b) = s_b(A) \\
-t(A_b) \subset t(A)
-\end{gather}
-Utilisons cette fonction pour définir $g := \theta_0$ et $d := \theta_1$. \\
-Pour synthétiser, $g$ et $d$ sont deux fonctions qui rendent le sous arbre binaire respectivement gauche ou droite, définies uniquement si ce sous arbre existe. \\
 
-\subsection{Arbre de Huffman}
-On appelle arbre de Huffman un arbre binaire $A$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
-\begin{itemize}
-\item $n(A) = n(g(A))+n(d(A))$,
-\item $g(A)$ et $d(A)$ sont tous deux des arbres de Huffman,
-\item ... (il manque un truc ici, à faire !).
-\end{itemize}
-On note $\mathcal{H}$ l'ensemble des arbres de Huffman et on a $\mathcal{H} \subset \mathcal{A}_\mathbb{N}$.
+\subsection{Théorème}
+Pour tout alphabet $\Sigma$, on a $\mathcal{H}_\Sigma \subset \mathcal{A}_{\Sigma^*\times \mathbb{N}}$. \\
+\textbf{Preuve :} \\
+A faire (facile, montrer que $M_{A,\ B}$ respecte les 3 propriétés d'un arbre binaire) \\
 
-\section{Classes d'équivalence d'arbres de Huffman}
-Intuitivement, on aimerait définir des classes d'équivalences des arbres de Huffman selon la longueur de la chaine de bits qu'ils encodent. Tâchons donc d'abord de pouvoir évaluer cette valeur à l'aide d'une fonction :
+\subsection{Classification des arbres de Huffman}
+Blabla
 $$
 \begin{matrix}
-\omega: &\mathcal{H} &\rightarrow &\mathbb{N} \\
-&A &\mapsto &{\begin{cases}
-	0 \text{ si } A = A_0 \\    
-	n(A)+\omega(g(A))+\omega(d(A)) \text{ sinon}
-\end{cases}}
+\omega: &\mathcal{H}_\Sigma &\rightarrow &\mathbb{N} \\
+&A &\mapsto &\mathlarger{\mathlarger{‎‎\sum}}_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎
 \end{matrix} \\
 $$
-Nous pouvons à présent définir $\mathcal{R}$ notre relation d'équivalence. Soient $A, B \in \mathcal{H}$, on a alors
+On définit la relation d'équivalence
 $$
-A \mathcal{R} B \iff \omega(A) = \omega(B)
+A\mathcal{R}B \iff \omega(A) = \omega(B),\ \forall A, B \in \mathcal{H}_\Sigma
 $$
-On dénote également $\overline{\mathcal{H}} := \mathcal{H}/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}$ par $\mathcal{R}$.
+On dénote également $\overline{\mathcal{H}_\Sigma} := \mathcal{H}_\Sigma/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}_\Sigma$ par $\mathcal{R}$.
+
+\subsection{Théorème}
+$\forall A,\ B \in \mathcal{H}_\Sigma,\ \omega\circ m(A,\ B) = \omega(A)+p\circ r(A)+\omega(B)+p\circ r(B)$ \\
+\textbf{Preuve :} \\
+A faire
+
+% \subsection{Fonctions gauche et droite d'un arbre binaire}
+% Soit $E$ un ensemble, pour tout $b \in \mathbb{F}_2$, on pose
+% $$
+% S_b := \{A \in \mathcal{A}_E,\ \exists \ x \in q(A),\ (r(A), b, x) \in t(A)\}
+% $$
+% Cela correspond à l'ensemble des arbres binaires qui ont un sous arbre ou gauche ou droit selon la valeur de $b$. \\
+% Ensuite, $\forall A \in S_b$, soit $s_b(A)$ l'unique $x \in q(A)$ tel que $(r(A),\ b,\ x) \in t(A)$. \\
+% Finalement, on peut poser
+% $$
+% \begin{matrix}
+% \theta_b: &S_b &\rightarrow &\mathcal{A}_E \\
+% &A &\mapsto &A_b
+% \end{matrix}
+% $$
+% avec $A_b$ l'unique arbre binaire dont l'ensemble des transitions est aussi grand que possible tel que
+% \begin{gather}
+% r(A_b) = s_b(A) \\
+% t(A_b) \subset t(A)
+% \end{gather}
+% Utilisons cette fonction pour définir $g := \theta_0$ et $d := \theta_1$. \\
+% Pour synthétiser, $g$ et $d$ sont deux fonctions qui rendent le sous arbre binaire respectivement gauche ou droite, définies uniquement si ce sous arbre existe. \\
+
+% \subsection{Arbre de Huffman}
+% Soit $(A_i)_{1 \leq i \leq n} \in \mathcal{A}_\mathbb{N}$ un $n$-uplet d'arbres binaires sur \mathbb{N}. \\
+% On définit $h$ une fonction qui à $A_i$ associe 
+% On appelle arbre de Huffman un arbre binaire $A$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
+% \begin{itemize}
+% \item $n(A) = n(g(A))+n(d(A))$,
+% \item $g(A)$ et $d(A)$ sont tous deux des arbres de Huffman,
+% \item ... (il manque un truc ici, à faire !).
+% \end{itemize}
+% On note $\mathcal{H}$ l'ensemble des arbres de Huffman et on a $\mathcal{H} \subset \mathcal{A}_\mathbb{N}$.
+
+% \section{Classes d'équivalence d'arbres de Huffman}
+% Intuitivement, on aimerait définir des classes d'équivalences des arbres de Huffman selon la longueur de la chaine de bits qu'ils encodent. Tâchons donc d'abord de pouvoir évaluer cette valeur à l'aide d'une fonction :
+% $$
+% \begin{matrix}
+% \omega: &\mathcal{H} &\rightarrow &\mathbb{N} \\
+% &A &\mapsto &{\begin{cases}
+% 	0 \text{ si } A = A_0 \\    
+% 	n(A)+\omega(g(A))+\omega(d(A)) \text{ sinon}
+% \end{cases}}
+% \end{matrix} \\
+% $$
+% Nous pouvons à présent définir $\mathcal{R}$ notre relation d'équivalence. Soient $A, B \in \mathcal{H}$, on a alors
+% $$
+% A \mathcal{R} B \iff \omega(A) = \omega(B)
+% $$
+% On dénote également $\overline{\mathcal{H}} := \mathcal{H}/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}$ par $\mathcal{R}$.
 
 \end{document}
