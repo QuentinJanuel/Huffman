@@ -127,7 +127,9 @@ Pour tout mot de $\Sigma$, l'arbre de Huffman associé est unique dans $\overlin
 \textbf{Preuve :} \\
 A faire
 
+\end{document}
 
+%%% A ressortir au besoin !
 % \subsection{Fonctions gauche et droite d'un arbre binaire}
 % Soit $E$ un ensemble, pour tout $b \in \mathbb{F}_2$, on pose
 % $$
@@ -149,33 +151,3 @@ A faire
 % \end{gather}
 % Utilisons cette fonction pour définir $g := \theta_0$ et $d := \theta_1$. \\
 % Pour synthétiser, $g$ et $d$ sont deux fonctions qui rendent le sous arbre binaire respectivement gauche ou droite, définies uniquement si ce sous arbre existe. \\
-
-% \subsection{Arbre de Huffman}
-% Soit $(A_i)_{1 \leq i \leq n} \in \mathcal{A}_\mathbb{N}$ un $n$-uplet d'arbres binaires sur \mathbb{N}. \\
-% On définit $h$ une fonction qui à $A_i$ associe 
-% On appelle arbre de Huffman un arbre binaire $A$ sur $\mathbb{N}$ qui respecte les propriétés suivantes :
-% \begin{itemize}
-% \item $n(A) = n(g(A))+n(d(A))$,
-% \item $g(A)$ et $d(A)$ sont tous deux des arbres de Huffman,
-% \item ... (il manque un truc ici, à faire !).
-% \end{itemize}
-% On note $\mathcal{H}$ l'ensemble des arbres de Huffman et on a $\mathcal{H} \subset \mathcal{A}_\mathbb{N}$.
-
-% \section{Classes d'équivalence d'arbres de Huffman}
-% Intuitivement, on aimerait définir des classes d'équivalences des arbres de Huffman selon la longueur de la chaine de bits qu'ils encodent. Tâchons donc d'abord de pouvoir évaluer cette valeur à l'aide d'une fonction :
-% $$
-% \begin{matrix}
-% \omega: &\mathcal{H} &\rightarrow &\mathbb{N} \\
-% &A &\mapsto &{\begin{cases}
-% 	0 \text{ si } A = A_0 \\    
-% 	n(A)+\omega(g(A))+\omega(d(A)) \text{ sinon}
-% \end{cases}}
-% \end{matrix} \\
-% $$
-% Nous pouvons à présent définir $\mathcal{R}$ notre relation d'équivalence. Soient $A, B \in \mathcal{H}$, on a alors
-% $$
-% A \mathcal{R} B \iff \omega(A) = \omega(B)
-% $$
-% On dénote également $\overline{\mathcal{H}} := \mathcal{H}/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}$ par $\mathcal{R}$.
-
-\end{document}
