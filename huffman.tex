@@ -17,6 +17,9 @@
 \date{\today}
 \begin{document}
 \maketitle
+\begin{abstract}
+Dans ce rapport, on se propose d'étudier le codage d'un texte en binaire par les arbres de Huffman. Nous verrons pourquoi ce codage est optimal...
+\end{abstract}
 \newpage
 \tableofcontents{}
 \newpage
@@ -47,7 +50,7 @@ On définit alors la somme de mots pondérés $x+y = (l(x)+l(y),\ p(x)+p(y))$ et
 Soit $E$ un ensemble, on dit que $A := (Q,\ T)$ est un arbre binaire sur $E$ avec $Q \subset E$ et $T \subset E\times \mathbb{F}_2\times E$ s'il respecte les 3 propriétés suivantes :
 \begin{enumerate}
 \item $\exists \ !\ r \in Q,\ \forall (x,\ b) \in Q\times \mathbb{F}_2,\ (x, b, r) \notin T$ ($r$ est appelée racine de $A$ notée $r(A)$),
-\item $\forall x_2 \in Q\backslash\{r\},\ \exists \ !\ (x_1,\ b) \in Q\times \mathbb{F}_2,\ (x_1,\ b,\ x_2) \in T$, % (on dit que $x_1$ est un parent de $x_2$ que l'on note $p(x_2)$),
+\item $\forall x_2 \in Q\backslash\{r\},\ \exists \ !\ (x_1,\ b) \in Q\times \mathbb{F}_2,\ (x_1,\ b,\ x_2) \in T$, (on dit que $x_1$ est un parent de $x_2$ que l'on note $\pi(x_2)$),
 \item $\forall (x_1,\ b) \in Q\times \mathbb{F}_2,\ \text{card}(\{x_2 \in Q,\ (x_1,\ b,\ x_2)\in T\}) \leq 1$.
 \end{enumerate}
 Les éléments de $Q$ (notés $q(A)$) sont appelés les états et les éléments de $T$ (notés $t(A)$) transitions. \\
@@ -56,17 +59,24 @@ Enfin, l'ensemble des arbres binaires sur $E$ est noté $\mathcal{A}_E$.
 
 \section{Arbre de Huffman}
 
+Si l'on prend un texte quelconque et que l'on compte le nombre d'occurences de chaque lettre afin de se retrouver avec une liste de lettres pondérées, considérées comme des arbres binaires à un état, on peut alors construire l'arbre de Huffman de ce texte en fusionnant à chaque étape les 2 arbres dont les poids des racines sont minimum jusqu'à ne se retrouver qu'avec un seul arbre. \\
+Une fusion consiste à rajouter une racine tel que son fils gauche soit l'un des deux arbres et son fils gauche l'autre arbre. \\ \\
+On peut ensuite encoder le texte en suivant le chemin depuis la racine jusqu'à chaque lettre en ajoutant un $0$ par transition à gauche et un $1$ pour la droite. \\
+Un tel arbre n'est pas unique car on peut choisir les arbres à poids minima s'il y en a plusieurs, de plus il n'y a pas de restriction sur quel arbre mettre à gauche ou à droite au moment de fusionner. \\
+L'objectif sera donc de montrer que ces choix n'affectent pas le nombre de bits nécessaires pour l'encodage.
+
 \subsection{Définition}
+Tâchons d'abord de définir quels arbres parmi les arbres binaires sont des arbres de Huffman. \\
 Prennons un alphabet $\Sigma$ quelconque. Tout arbre de la forme
 $$
 (\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |x| = 1
 $$
-est appelé arbre de Huffman sur $\Sigma$. \\
+sera appelé arbre de Huffman sur $\Sigma$. \\
 De plus, soient $A$ et $B$ deux arbres de Huffman et $r := r(A)+r(B)$, alors
 $$
 M_{A,\ B} := (q(A) \cup q(B) \cup \{r\},\ t(A)\cup(B)\cup \{(r,\ 0,\ r(A)),\ (r,\ 1,\ r(B))\})
 $$
-est également un arbre de Huffman, on dit que $M$ est la fusion de $A$ et de $
+est également un arbre de Huffman et on dit que $M$ est la fusion de $A$ et de $
 B$. \\
 Notons $\mathcal{H}_\Sigma$ l'ensemble des arbres de Huffman sur $\Sigma$. \\
 On pose aussi
@@ -77,29 +87,46 @@ m: &\mathcal{H}_\Sigma\times \mathcal{H}_\Sigma &\rightarrow &\mathcal{H}_\Sigma
 \end{matrix}
 $$
 
-\subsection{Théorème}
+\subsection{Propriété}
 Pour tout alphabet $\Sigma$, on a $\mathcal{H}_\Sigma \subset \mathcal{A}_{\Sigma^*\times \mathbb{N}}$. \\
 \textbf{Preuve :} \\
 A faire (facile, montrer que $M_{A,\ B}$ respecte les 3 propriétés d'un arbre binaire) \\
 
 \subsection{Classification des arbres de Huffman}
-Blabla
+L'objectif est de construire des classes d'équivalence d'arbres de Huffman selon le nombre de bits qu'ils encodent. \\
+L'ensemble des feuilles d'un arbre binaire $A$ est
+$$
+\mathcal{F}_A := \{x_1\in q(A),\ \forall (x_1,\ b)\in q(A)\times \mathbb{F}_2,\ (x_1,\ b,\ x_2)\notin t(A)\}
+$$ 
+Soit $\omega$ une fonction qui à un arbre lui associe cette longueur d'encodage, on a par définition
 $$
 \begin{matrix}
 \omega: &\mathcal{H}_\Sigma &\rightarrow &\mathbb{N} \\
-&A &\mapsto &\mathlarger{\mathlarger{‎‎\sum}}_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎
+&A &\mapsto &\mathlarger{\mathlarger{‎‎\sum}}_{x\in \mathcal{F}_A} n_x\times p(x)‎‎
 \end{matrix} \\
 $$
+où $n_x$ est la profondeur de $x$, c'est-à-dire l'entier $n$ tel que $\pi^n(x) = r(A)$. \\
 On définit la relation d'équivalence
 $$
-A\mathcal{R}B \iff \omega(A) = \omega(B),\ \forall A, B \in \mathcal{H}_\Sigma
+A\mathcal{R}B \iff \omega(A) = \omega(B),\ \forall A,\ B \in \mathcal{H}_\Sigma
 $$
 On dénote également $\overline{\mathcal{H}_\Sigma} := \mathcal{H}_\Sigma/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}_\Sigma$ par $\mathcal{R}$.
 
-\subsection{Théorème}
+\subsection{Lemme 1}
+$\forall A \in \mathcal{H}_\Sigma,\ \omega(A) = \mathlarger{\mathlarger{‎‎\sum}}_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎$ \\
+\textbf{Preuve :} \\
+A faire
+
+\subsection{Lemme 2}
 $\forall A,\ B \in \mathcal{H}_\Sigma,\ \omega\circ m(A,\ B) = \omega(A)+p\circ r(A)+\omega(B)+p\circ r(B)$ \\
 \textbf{Preuve :} \\
 A faire
+
+\subsection{Théorème}
+Pour tout mot de $\Sigma$, l'arbre de Huffman associé est unique dans $\overline{\mathcal{H}_\Sigma}$. \\
+\textbf{Preuve :} \\
+A faire
+
 
 % \subsection{Fonctions gauche et droite d'un arbre binaire}
 % Soit $E$ un ensemble, pour tout $b \in \mathbb{F}_2$, on pose
