@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{relsize}
 \let\iff\Longleftrightarrow
+\let\qed\square
 \newtheorem{theo}{Théorème}
 \pagestyle{headings}
 \title{Huffman}
@@ -18,7 +19,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Dans ce rapport, on se propose d'étudier le codage d'un texte en binaire par les arbres de Huffman. Nous verrons pourquoi ce codage est optimal...
+Dans ce rapport, on se propose d'étudier le codage d'un texte en binaire par les arbres de Huffman. Nous verrons pourquoi la rentabilité de l'algorithme est indépendante de tout choix ainsi que pourquoi ce codage est optimal.
 \end{abstract}
 \newpage
 \tableofcontents{}
@@ -59,7 +60,7 @@ Enfin, l'ensemble des arbres binaires sur $E$ est noté $\mathcal{A}_E$.
 
 \section{Arbre de Huffman}
 
-Si l'on prend un texte quelconque et que l'on compte le nombre d'occurences de chaque lettre afin de se retrouver avec une liste de lettres pondérées, considérées comme des arbres binaires à un état, on peut alors construire l'arbre de Huffman de ce texte en fusionnant à chaque étape les 2 arbres dont les poids des racines sont minimum jusqu'à ne se retrouver qu'avec un seul arbre. \\
+Si l'on prend un texte quelconque et que l'on compte le nombre d'occurrences de chaque lettre afin de se retrouver avec une liste de lettres pondérées, considérées comme des arbres binaires à un état, on peut alors construire l'arbre de Huffman de ce texte en fusionnant à chaque étape les 2 arbres dont les poids des racines sont minimum jusqu'à ne se retrouver qu'avec un seul arbre. \\
 Une fusion consiste à rajouter une racine tel que son fils gauche soit l'un des deux arbres et son fils gauche l'autre arbre. \\ \\
 On peut ensuite encoder le texte en suivant le chemin depuis la racine jusqu'à chaque lettre en ajoutant un $0$ par transition à gauche et un $1$ pour la droite. \\
 Un tel arbre n'est pas unique car on peut choisir les arbres à poids minima s'il y en a plusieurs, de plus il n'y a pas de restriction sur quel arbre mettre à gauche ou à droite au moment de fusionner. \\
@@ -67,16 +68,20 @@ L'objectif sera donc de montrer que ces choix n'affectent pas le nombre de bits 
 
 \subsection{Définition}
 Tâchons d'abord de définir quels arbres parmi les arbres binaires sont des arbres de Huffman. \\
-Prennons un alphabet $\Sigma$ quelconque. Tout arbre de la forme
+Prenons un alphabet $\Sigma$ quelconque. Tout arbre de la forme
 $$
 (\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |x| = 1
 $$
 sera appelé arbre de Huffman sur $\Sigma$. \\
-De plus, soient $A$ et $B$ deux arbres de Huffman et $r := r(A)+r(B)$, alors
+De plus, soient $A$ et $B$ deux arbres de Huffman et $r := r(A)+r(B)$ de telle sorte que
 $$
-M_{A,\ B} := (q(A) \cup q(B) \cup \{r\},\ t(A)\cup(B)\cup \{(r,\ 0,\ r(A)),\ (r,\ 1,\ r(B))\})
+q(A) \cap q(B) \cap \{r\} = \emptyset
 $$
-est également un arbre de Huffman et on dit que $M$ est la fusion de $A$ et de $
+Alors on pose
+$$
+M_{A,\ B} := (q(A) \cup q(B) \cup \{r\},\ t(A)\cup t(B)\cup \{(r,\ 0,\ r(A)),\ (r,\ 1,\ r(B))\})
+$$
+qui est également un arbre de Huffman et on dit que $M$ est la fusion de $A$ et de $
 B$. \\
 Notons $\mathcal{H}_\Sigma$ l'ensemble des arbres de Huffman sur $\Sigma$. \\
 On pose aussi
@@ -87,10 +92,26 @@ m: &\mathcal{H}_\Sigma\times \mathcal{H}_\Sigma &\rightarrow &\mathcal{H}_\Sigma
 \end{matrix}
 $$
 
-\subsection{Propriété}
+\subsection{Proposition 1}
 Pour tout alphabet $\Sigma$, on a $\mathcal{H}_\Sigma \subset \mathcal{A}_{\Sigma^*\times \mathbb{N}}$. \\
 \textbf{Preuve :} \\
-A faire (facile, montrer que $M_{A,\ B}$ respecte les 3 propriétés d'un arbre binaire) \\
+Pour les arbres de Huffman de la forme $(\{x\},\ \emptyset)$ :
+\begin{enumerate}
+\item La racine est $x$ et est bien unique (aucune transition de la forme $(., ., x)$ vu que l'ensemble des transitions est vide).
+\item Aucun état n'est pas la racine donc la propriété est trivialement vérifiée.
+\item L'ensemble des transitions étant vide, le cardinal sera toujours inférieur à $1$.
+\end{enumerate}
+Pour les arbres de Huffman de la forme $M_{A,\ B}$ :
+\begin{enumerate}
+\item $r(A)$, $r(B)$ et $r$ sont les seuls candidats pour être des racines (car $A$ et $B$ sont des arbres binaires et n'ont qu'une seule racine). \\
+Or on a $(r,\ 0,\ r(A))$ et $(r,\ 1,\ r(B))$ des transitions donc $r(A)$ et $r(B)$ ne sont pas racines. La racine $r$ est bien unique.
+\item Soit $x$ un état n'étant pas la racine, il appartient donc soit à $q(A)$, soit à $q(B)$. S'il n'est pas racine d'un de ces sous arbres, alors la propriété est vérifiée, sinon les transitions $(r,\ 0,\ r(A))$ et $(r,\ 1,\ r(B))$ remplissent la propriété.
+\item La propriété est déjà vérifiée pour tout état qui n'est pas $r$, or seulement deux transitions sont rajoutées et on a
+$$
+\text{card}(\{x \in Q,\ (r,\ 0,\ x) \in T\}) = \text{card}(\{x \in Q,\ (r,\ 1,\ x) \in T\}) = 1 \leq 1
+$$
+\end{enumerate}
+\qed
 
 \subsection{Classification des arbres de Huffman}
 L'objectif est de construire des classes d'équivalence d'arbres de Huffman selon le nombre de bits qu'ils encodent. \\
@@ -102,30 +123,64 @@ Soit $\omega$ une fonction qui à un arbre lui associe cette longueur d'encodage
 $$
 \begin{matrix}
 \omega: &\mathcal{H}_\Sigma &\rightarrow &\mathbb{N} \\
-&A &\mapsto &\mathlarger{\mathlarger{‎‎\sum}}_{x\in \mathcal{F}_A} n_x\times p(x)‎‎
+&A &\mapsto &\mathlarger{\mathlarger{‎‎\sum}}_{x\in \mathcal{F}_A} n_A(x)\times p(x)‎‎
 \end{matrix} \\
 $$
-où $n_x$ est la profondeur de $x$, c'est-à-dire l'entier $n$ tel que $\pi^n(x) = r(A)$. \\
+où $n_A(x)$ est la profondeur de $x$ dans l'arbre $A$, c'est-à-dire l'entier $n$ tel que $\pi^n(x) = r(A)$. \\
 On définit la relation d'équivalence
 $$
 A\mathcal{R}B \iff \omega(A) = \omega(B),\ \forall A,\ B \in \mathcal{H}_\Sigma
 $$
 On dénote également $\overline{\mathcal{H}_\Sigma} := \mathcal{H}_\Sigma/\mathcal{R}$ l'ensemble quotient de $\mathcal{H}_\Sigma$ par $\mathcal{R}$.
 
-\subsection{Lemme 1}
-$\forall A \in \mathcal{H}_\Sigma,\ \omega(A) = \mathlarger{\mathlarger{‎‎\sum}}_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎$ \\
-\textbf{Preuve :} \\
-A faire
-
-\subsection{Lemme 2}
+\subsection{Lemme}
 $\forall A,\ B \in \mathcal{H}_\Sigma,\ \omega\circ m(A,\ B) = \omega(A)+p\circ r(A)+\omega(B)+p\circ r(B)$ \\
 \textbf{Preuve :} \\
-A faire
+Soient $A$ et $B$ deux arbres de Huffman,
+\begin{align*}
+\omega\circ m(A,\ B) &= \sum_{x \in \mathcal{F}_{m(A,\ B)}} n_{m(A,\ B)}(x)\times p(x) \\
+&= \sum_{x \in \mathcal{F}_A} (n_A(x)+1)\times p(x)+\sum_{x \in \mathcal{F}_B} (n_B(x)+1)\times p(x) \\
+&= \sum_{x \in \mathcal{F}_A} n_A(x)\times p(x) + \sum_{x \in \mathcal{F}_A} p(x) + \sum_{x \in \mathcal{F}_B} n_B(x)\times p(x) + \sum_{x \in \mathcal{F}_B} p(x) \\
+&= \omega(A) + p\circ r(A) + \omega(B) + p\circ r(B)
+\end{align*}
+\qed
+
+\subsection{Proposition 2}
+$$
+\forall A \in \mathcal{H}_\Sigma,\ \omega(A) = \sum_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎
+$$
+\textbf{Preuve :} \\
+Comme chaque arbre de Huffman peut s'exprimer de la forme $m(m(...,\ ...),\ m(...,\ ...))$ jusqu'à se retrouver avec des arbres tels $(\{x\},\ \emptyset)$, procédons par récurrence sur la fonction fusion. \\
+Soit $A := (\{x\},\ \emptyset)$, alors
+$$
+\omega(A) = 0 = \sum_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎
+$$
+La propriété est bien vérifiée. \\
+Prenons maintenant deux arbres $A$ et $B$ tels que la propriété soit vraie, vérifions la pour $m(A,\ B)$ :
+\begin{align*}
+\omega\circ m(A,\ B) &= \omega(A)+\omega(B)+p\circ r(A)+p\circ r(B) \\
+&= \sum_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎+\sum_{(x_1,\ b,\ x_2)\in t(B)} p(x_2)+\sum_{(x_1,\ b,\ x_2) \in \{(r,\ 0,\ r(A)),\ (r,\ 1,\ r(B))\}} p(x_2)‎‎ \\
+&= \sum_{(x_1,\ b,\ x_2)\in t\circ m(A,\ B)} p(x_2)
+\end{align*}
+La propriété est donc vraie pour tout arbre de Huffman.
+\qed
 
 \subsection{Théorème}
 Pour tout mot de $\Sigma$, l'arbre de Huffman associé est unique dans $\overline{\mathcal{H}_\Sigma}$. \\
 \textbf{Preuve :} \\
-A faire
+Prenons un mot de $\Sigma^*$, l'algorithme de Huffman nous dit de considérer l'ensemble des arbres de Huffman de la forme$(\{(a,\ n)\},\ \emptyset)$ avec $a$ les lettres du mot et $n$ leur nombre d'occurrences. \\
+Ensuite, étant donnée un ensemble de $n$ arbres, il faut considérer l'ensemble de $n-1$ arbres où l'on a fusionné les deux arbres dont les poids des racines sont minimum, et ce jusqu'à ne se retrouver qu'avec un seul arbre. \\
+Or ces arbres ne sont pas forcément uniques et de plus $m(A,\ B) \neq m(B,\ A)$. \\ \\
+Observons ce que devient la somme des longueurs d'encodage $\omega$ d'un ensemble d'arbres $X$ après une itération de l'algorithme. \\
+Soient $A$ et $B$ deux arbres de $X$ dont les poids des racines sont minimum. La nouvelle liste sera donc $Y := X\backslash\{A,\ B\}\cup\{m(A,\ B)\}$.
+\begin{align*}
+\sum_{C\in Y} \omega(C) &= \omega\circ m(A,\ B)+\sum_{C\in X\backslash\{A,\ B\}} \omega(C) \\
+&= \omega(A)+\omega(B)+p\circ r(A)+p\circ r(B)+\sum_{C\in X\backslash\{A,\ B\}} \omega(C) \\
+&= p\circ r(A)+p\circ r(B)+\sum_{C\in X} \omega(C)
+\end{align*}
+On constate que la somme des poids a augmenté de $p\circ r(A)+p\circ r(B)$ ce qui est indépendant de l'ordre de la fusion entre $A$ et $B$ ainsi que le choix des arbres aux poids minimum parmi tous les arbres de l'ensemble. \\ \\
+Ainsi si l'algorithme a donné pour un mot $m$ deux arbres $A$ et $B$ différents, on aura quand même $\omega(A) = \omega(B) \iff A\mathcal{R}B$ ce qui montre qu'ils appartiennent à la même classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$. $\qed$ \\ \\
+Profitons en pour poser $h: \Sigma^* \rightarrow \overline{\mathcal{H}_\Sigma}$ la fonction qui à un mot de $\Sigma$ y associe la classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$ des arbres de Huffman construits par l'algorithme.
 
 \end{document}
 
