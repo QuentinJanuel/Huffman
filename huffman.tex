@@ -70,7 +70,7 @@ L'objectif sera donc de montrer que ces choix n'affectent pas le nombre de bits 
 Tâchons d'abord de définir quels arbres parmi les arbres binaires sont des arbres de Huffman. \\
 Prenons un alphabet $\Sigma$ quelconque. Tout arbre de la forme
 $$
-(\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |x| = 1
+(\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |l(x)| = 1
 $$
 sera appelé arbre de Huffman sur $\Sigma$. \\
 De plus, soient $A$ et $B$ deux arbres de Huffman et $r := r(A)+r(B)$ de telle sorte que
@@ -181,6 +181,56 @@ Soient $A$ et $B$ deux arbres de $X$ dont les poids des racines sont minimum. La
 On constate que la somme des poids a augmenté de $p\circ r(A)+p\circ r(B)$ ce qui est indépendant de l'ordre de la fusion entre $A$ et $B$ ainsi que le choix des arbres aux poids minimum parmi tous les arbres de l'ensemble. \\ \\
 Ainsi si l'algorithme a donné pour un mot $m$ deux arbres $A$ et $B$ différents, on aura quand même $\omega(A) = \omega(B) \iff A\mathcal{R}B$ ce qui montre qu'ils appartiennent à la même classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$. $\qed$ \\ \\
 Profitons en pour poser $h: \Sigma^* \rightarrow \overline{\mathcal{H}_\Sigma}$ la fonction qui à un mot de $\Sigma$ y associe la classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$ des arbres de Huffman construits par l'algorithme.
+
+\newpage
+
+\section{Utilisation concrète}
+L'intérêt même des arbres de Huffman est de compresser un message. Considérons le message $m := "caba" \in\Sigma^* := {a,\ b,\ c}$ ainsi que son arbre de Huffman associé $A:=h(m)\in\overline{\mathcal{H}_\Sigma}$. Cette section a alors pour but d'expliquer comment utiliser $A$ pour encoder $m$.
+
+\subsection{Encodage de l'arbre lui-même}
+Afin de pouvoir reconstituer le message, il faut tout d'abord trouver un moyen d'encoder l'arbre de Huffman du message en binaire. Cette tâche est simplifiée de par la définition d'arbre binaire donnée plus haut : supposons que l'arbre $A$ se note
+\begin{align*}
+A = (& \\
+	&\{(a,\ 2),\ (b,\ 1),\ (c,\ 1),\ (bc,\ 2),\ (abc,\ 4)\}, \\
+	&\{((abc,\ 4),\ 0,\ (a,\ 2)),\ ((abc,\ 4),\ 1,\ (bc,\ 2)),\ ((bc,\ 2),\ 0,\ (b,\ 1)),\ (bc,\ 2),\ 1,\ (c,\ 1))\} \\
+)&
+\end{align*}
+On voit alors que l'arbre n'est défini que par une succession de caractères, mieux encore il peut être simplifié pour une écriture plus courte mais néanmoins toujours suffisante :
+il est bon de noter que seules les transitions donnent toute l'information nécessaire de l'arbre, que les poids sont inutiles ainsi que les mots ayant une longueur supérieure à 1. De plus, la justesse de la syntaxe mathématique n'est ici pas importante. \\
+Remplaçons donc chaque mot de longueur non 1 par une lettre quelconque qui n'est pas encore utilisée (ici $x$ pour $abc$ et $y$ pour $ab$). Mettons toutes les transitions gauches du côté gauche et idem pour la droite. Enfin, séparons chaque symbole par une virgule, chaque transition par 2 virgules et les deux côtés par 3 virgules. Pour l'exemple, le même arbre donnerait ceci :
+$$
+x,a,,y,b,,,x,y,,y,c
+$$
+On peut alors utiliser la table ASCII afin d'encoder un tel arbre. Pour séparer l'arbre du début du message il est possible de rajouter à nouveau 3 virgules à la fin de l'arbre.
+
+\textbf{Note}
+Il serait aussi possible de créer l'arbre de Huffman basé sur les fréquences d'appartition des lettres de l'alphabet dans la langue française, l'avantage étant qu'il n'y aurait alors plus besoin d'encoder l'arbre pour chaque message. Seulement la compression ne sera pas optimale et suppose la langue du message.
+
+\subsection{Encodage du message en utilisant l'arbre}
+Remplaçons chaque lettre par la succession des transitions partant de la racine jusqu'à la feuille correspondante à la lettre. Une transition sera encodée par un $0$ si elle va à gauche, et par un $1$ si elle va à droite. L'algorithme de décodage ayant connaissance de l'arbre, il sait quand se termine la définition d'un caractère lorsqu'il arrive sur une feuille. \\
+En utilisant l'arbre $A$ tel décrit dans ci-dessus, le message serait alors encodé par
+$$
+11\ 0\ 10\ 0
+$$
+
+\newpage
+
+\section{Performance}
+
+\subsection{Performance d'un encodage ASCII}
+WIP
+\subsection{Performance d'un encodage par les arbres de Huffman}
+WIP
+
+\newpage
+
+\section{Optimalité}
+
+\subsection{Complexité de Kolmogorov}
+WIP
+
+\subsection{Entropie}
+WIP
 
 \end{document}
 
