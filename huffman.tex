@@ -5,13 +5,15 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{relsize}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \let\iff\Longleftrightarrow
 \let\qed\square
 \newtheorem{theo}{Théorème}
 \pagestyle{headings}
 \title{Huffman}
 \author{
-\textbf{Auteurs :} Quentin Januel, Loïc Mohin et Anthony Villeneuve \\
+\textbf{Auteurs :} Quentin Januel et Loïc Mohin \\
 \textbf{Mentors :} Olivier Gipouloux et Stéphane Gaussent \\ \\
 \textbf{Fait à :} Université Jean Monnet, Saint Etienne
 }
@@ -204,7 +206,7 @@ Remplaçons donc chaque mot de longueur non 1 par une lettre quelconque qui n'es
 $$
 x,a,,y,b,,,x,y,,y,c
 $$
-On peut alors utiliser la table ASCII afin d'encoder un tel arbre. Pour séparer l'arbre du début du message il est possible de rajouter à nouveau 3 virgules à la fin de l'arbre.
+On peut alors utiliser encoder l'arbre en encodant chaque caractère par un nombre en binaire. Pour séparer l'arbre du début du message il est possible de rajouter à nouveau 3 virgules à la fin de l'arbre.
 
 \textbf{Note}
 Il serait aussi possible de créer l'arbre de Huffman basé sur les fréquences d'appartition des lettres de l'alphabet dans la langue française, l'avantage étant qu'il n'y aurait alors plus besoin d'encoder l'arbre pour chaque message. Seulement la compression ne sera pas optimale et suppose la langue du message.
@@ -220,10 +222,81 @@ $$
 
 \section{Performance}
 
-\subsection{Performance d'un encodage ASCII}
-WIP
-\subsection{Performance d'un encodage par les arbres de Huffman}
-WIP
+\subsection{Performance d'un encodage dit naïf}
+Le principe d'un codage naïf est de regarder l'alphabet et de remplacer chacun de ses éléments par un nombre en binaire partant de $0$ jusqu'au dernier caractère. Par exemple si le mot est \textbf{bonneannee}, alors l'alphabet est $\{\text{b},\ \text{o},\ \text{n},\ \text{e},\ \text{a}\}$. Ici il y a $5$ caractères différents, il faut donc compter en binaire jusqu'à $4$ (car le $0$ est aussi un caractère). \\
+On se retrouve avec la table de conversion suivante :
+\begin{center}
+	\begin{tabular}{ | c | c | c | c | c | }
+		\hline
+		b & o & n & e & a \\ \hline
+		000 & 001 & 010 & 011 & 100 \\
+		\hline
+	\end{tabular}
+\end{center}
+Puisque le $4$ s'encode sur $3$ bits, il faudra $3$ bits par caratère et donc la longueur de l'encodage sera $3\times n$ où $n$ est la longueur du mot (ici $3\times 10 = 30$). \\
+Soit $m$ un mot sur $\Sigma$, la longueur d'encodage en bits de $m$ sera donc
+$$
+|m|\times \ceil[\big]{\text{log}_2|\Sigma|}
+$$
+
+\subsection{Preuve spécifique que le codage Huffman est meilleur que le naïf}
+Considérons tout d'abord un mot $m$ tel que son arbre de Huffman associé soit de profondeur maximum pour un minimum de caractères différents. C'est dans ce cas précis que nous allons essayer de montrer que le codage Huffman est plus efficace. \\
+Pour se faire, considérons un arbre à $2$ feuilles de poids $1$. La racine vaudra donc $2$. Il est possible de fusionner cet arbre avec un arbre à $1$ feuille de poids $1$ et notre nouvel arbre aura désormais une racine de poids $3$. Cependant maintenant il est impossible de fusionner cet arbre avec un arbre de poids inférieur à $2$ sinon il aurait d'abord fallu associer cet arbre avec l'arbre à $1$ feuille de poids $1$. \\
+En procédant ainsi jusqu'à obtenir un arbre $A$ à $n$ feuilles on obtient un arbre de profondeur maximale tout en minimisant l'écart entre les poids au fur et à mesure de la construction de l'arbre. \\ \\
+On constate alors que les poids des feuilles suivent la suite de Fibonacci et on a
+\begin{align*}
+\omega(A) &= \sum_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎ \\
+&= \sum_{i = 0}^{n-2} \text{Fibo}(i)+\text{Fibo}(i+1) \\
+&= \sum_{i = 0}^{n-2} \text{Fibo}(i+2) = \sum_{i = 2}^n \text{Fibo}(i)
+\end{align*}
+où $\text{Fibo}(n)$ est le $n$-ième nombre de Fibonacci et $n = |\Sigma|$. \\
+Quant à la longueur d'encodage si le codage naïf avait été utilisé à la place, on a
+$$
+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)}
+$$
+
+Prouvons par réccurence sur $n$ que l'on a toujours
+$$
+\sum_{i = 2}^n \text{Fibo}(i) \leq (1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)}
+$$
+On a vérifié à l'aide de Python que la proposition est vraie jusqu'au rang $n = 5$, supposons maintenant que la propriété est vraie jusqu'au rang $n$ et vérifions si elle est vraie au rang $n+1$. \\
+Déjà, puisque la suite $\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}$ tend vers $\phi < 2$ et est croissante, alors
+$$
+\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1 \leq 3\ \forall n \in \mathbb{N*}
+$$
+De plus
+$$
+\forall n > 4,\ \ceil[\big]{\text{log}_2(n)} \geq 3
+$$
+On peut donc partir de l'inégalité
+\begin{align*}
+&\ \frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1 \leq \ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n-1)\times(\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n)+\text{Fibo}(n-1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ B := \text{Fibo}(n+1)+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} \\
+&\leq (1+\text{Fibo}(n-1)+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} =: C
+\end{align*}
+Or on a
+\begin{align*}
+C &= (1+\sum_{i = 0}^{n-1}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} \\
+&\leq (1+\sum_{i = 0}^{n-1}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n+1)} =: D
+\end{align*}
+Enfin, d'après l'hypothèse de réccurence on a
+\begin{align*}
+A :=&\ \sum_{i = 2}^{n+1} \text{Fibo}(i) \\
+=&\ \text{Fibo}(n+1)+\sum_{i = 2}^n \text{Fibo}(i) \\
+\leq&\ \text{Fibo}(n+1)+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} = B
+\end{align*}
+Au final on constate que $A \leq B \leq C \leq D \implies A \leq D$ \\
+\qed
+
+\newpage
+
+\section{Combinatoire}
+On s'intéresse à compter le nombre d'arbres binaires complets à $n$ feuilles. \\
+WIP \\
 
 \newpage
 
