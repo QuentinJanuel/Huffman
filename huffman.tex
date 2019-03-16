@@ -70,7 +70,7 @@ L'objectif sera donc de montrer que ces choix n'affectent pas le nombre de bits 
 Tâchons d'abord de définir quels arbres parmi les arbres binaires sont des arbres de Huffman. \\
 Prenons un alphabet $\Sigma$ quelconque. Tout arbre de la forme
 $$
-(\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |x| = 1
+(\{x\},\ \emptyset),\ x \in \Sigma^*\times \mathbb{N},\ |l(x)| = 1
 $$
 sera appelé arbre de Huffman sur $\Sigma$. \\
 De plus, soient $A$ et $B$ deux arbres de Huffman et $r := r(A)+r(B)$ de telle sorte que
@@ -91,6 +91,9 @@ m: &\mathcal{H}_\Sigma\times \mathcal{H}_\Sigma &\rightarrow &\mathcal{H}_\Sigma
 &(A,\ B) &\mapsto &M_{A,\ B}
 \end{matrix}
 $$
+
+\textbf{Note :} \\
+Cette partie des arbres binaires est en fait trop grande car elle prend en considération des arbres qui ne peuvent pas être amenés à être créés par l'algorithme (exemple $(\{1\},\ \{2\})$)
 
 \subsection{Proposition 1}
 Pour tout alphabet $\Sigma$, on a $\mathcal{H}_\Sigma \subset \mathcal{A}_{\Sigma^*\times \mathbb{N}}$. \\
@@ -181,6 +184,10 @@ Soient $A$ et $B$ deux arbres de $X$ dont les poids des racines sont minimum. La
 On constate que la somme des poids a augmenté de $p\circ r(A)+p\circ r(B)$ ce qui est indépendant de l'ordre de la fusion entre $A$ et $B$ ainsi que le choix des arbres aux poids minimum parmi tous les arbres de l'ensemble. \\ \\
 Ainsi si l'algorithme a donné pour un mot $m$ deux arbres $A$ et $B$ différents, on aura quand même $\omega(A) = \omega(B) \iff A\mathcal{R}B$ ce qui montre qu'ils appartiennent à la même classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$. $\qed$ \\ \\
 Profitons en pour poser $h: \Sigma^* \rightarrow \overline{\mathcal{H}_\Sigma}$ la fonction qui à un mot de $\Sigma$ y associe la classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$ des arbres de Huffman construits par l'algorithme.
+
+\newpage
+
+\section{Encodage d'un texte en utilisant les arbres de Huffman}
 
 \end{document}
 
