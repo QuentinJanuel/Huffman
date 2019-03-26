@@ -303,10 +303,23 @@ WIP \\
 \section{Optimalité}
 
 \subsection{Complexité de Kolmogorov}
-WIP
+La complexité de Kolmogorov $K$ permet de quantifier le nombre de caractères nécessaires minimum afin de produire une chaine de texte dans un langage de programmation donné. \\
+C'est-à-dire que, si l'on considère le langage Python par exemple, alors $K(\text{texte}) = 10$ signifierait que le nombre minimum de caractères Python pour afficher \textbf{texte} est $10$.
+Le choix du langage n'a pas d'importance.
+Exemple : \\
+\textbf{print("Hello world")} permet d'afficher le texte \textbf{Hello world}, on a donc
+$$
+K(\text{Hello world}) \leq 20
+$$
+Il est très facile de montrer que pour tout langage, il existe une constante $p$ telle que pour tout texte $t$, on a $K(t) \leq |t|+p$. \\ \\
+On peut utiliser cette complexité afin de déterminer l'optimabilité de compression d'une chaine de caractères donnée, cependant cela ne correspond pas à un codage par symbole, ne remettant alors pas en cause l'optimabilité de Huffman dans son domaine. \\ \\
+Fâcheusement, il est impossible de construire une fonction calculant la complexité de Kolmogorov, même si on pourrait croire que construire un tel algorithme est possible au premier abord naïf. \\
+METTRE ICI ALGORITHME NAIF \\
+EXPLIQUER POURQUOI IL NE MARCHE PAS \\
+METTRE ICI PREUVE QU'IL NE MARCHE PAS \\
 
 \subsection{Entropie}
-WIP
+
 
 \end{document}
 
