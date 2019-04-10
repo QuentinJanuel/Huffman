@@ -296,7 +296,22 @@ Au final on constate que $A \leq B \leq C \leq D \implies A \leq D$ \\
 
 \section{Combinatoire}
 On s'intéresse à compter le nombre d'arbres binaires complets à $n$ feuilles. \\
-WIP \\
+On considère que deux arbres sont les mêmes si l'on peut obtenir l'un en inversant le sous arbre droit avec le sous arbre gauche dans des noeuds donnés. \\
+Pour $n = 1$, il existe un unique arbre. Pour $n = 2$ et $n = 3$, idem. Le cas de $n = 3$ est un peu plus subtil car l'on pourrait croire qu'il existe deux arbres différents mais une simple permutation des sous arbres au niveau de la racine suffit à retrouver l'autre arbre. \\
+En continuant ainsi, on obtient la suite suivante : \\
+$$
+1, 1, 1, 2, 3, 6, 11, 24, 47, 103, ...
+$$
+Il est possible de définir cette suite par récurrence. \\
+En effet, pour $n$ entier, un arbre à $n$ feuilles est forcément la fusion de deux arbres à $p$ et $q$ feuilles tel que $p+q = n$. \\
+Il s'agit donc la fusion de deux arbres à $p$ et $n-p$ feuilles avec $p$ inferieur ou egal à $n$.
+Il faut donc sommer de $p$ entier jusqu'à $n$ le nombre d'arbre à $p$ feuilles multiplié par le nombre d'arbre à $n-p$ feuilles.
+Cela nous donne la formule suivante :
+$$
+u_n = \sum_{p = 1}^{\ceil[\big]{n/2}} u_p\times u_{n-p},\ \forall n \in \mathbb{N}^*
+$$
+\\
+Après une rapide recherche dans l'OEIS
 
 \newpage
 
