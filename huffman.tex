@@ -6,6 +6,8 @@
 \usepackage{amssymb}
 \usepackage{relsize}
 \usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage[]{algpseudocode}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \let\iff\Longleftrightarrow
 \let\qed\square
@@ -311,7 +313,7 @@ $$
 u_n = \sum_{p = 1}^{\ceil[\big]{n/2}} u_p\times u_{n-p},\ \forall n \in \mathbb{N}^*
 $$
 \\
-Après une rapide recherche dans l'OEIS
+Après une rapide recherche dans l'OEIS, il se trouve que cette suite porte le nom de \textbf{half Catalan numbers} (ou \textbf{demi nombres de Catalan}), on voit aisément d'où vient le nom car les nombres de Catalan sont générés à partir de la même formule à l'exception que la somme va jusqu'à $n$. Malheureusement il n'existe pas de formule non récursive des demi nombres de Catalan.
 
 \newpage
 
@@ -328,12 +330,47 @@ K(\text{Hello world}) \leq 20
 $$
 Il est très facile de montrer que pour tout langage, il existe une constante $p$ telle que pour tout texte $t$, on a $K(t) \leq |t|+p$. \\ \\
 On peut utiliser cette complexité afin de déterminer l'optimabilité de compression d'une chaine de caractères donnée, cependant cela ne correspond pas à un codage par symbole, ne remettant alors pas en cause l'optimabilité de Huffman dans son domaine. \\ \\
-Fâcheusement, il est impossible de construire une fonction calculant la complexité de Kolmogorov, même si on pourrait croire que construire un tel algorithme est possible au premier abord naïf. \\
-METTRE ICI ALGORITHME NAIF \\
-EXPLIQUER POURQUOI IL NE MARCHE PAS \\
-METTRE ICI PREUVE QU'IL NE MARCHE PAS \\
+Fâcheusement, il est impossible de construire une fonction calculant la complexité de Kolmogorov, même si on pourrait croire que construire un tel algorithme est possible au premier abord naïf : \\
 
-\subsection{Entropie}
+\begin{algorithm}
+\begin{algorithmic}[1]
+\Function{KolmogorovComplexity}{s}
+\For{$i = n \textbf{ to } \infty$}
+\For{$\textbf{each string p of length exactly } n$}
+\If{$\textbf{isValidProgram}(p) \textbf{ and } \textbf{evaluate}(p) = s$}
+\State \Return $n$
+\EndIf
+\EndFor
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+Le principe étant de générer toutes les chaines de texte à $n$ caractères en incrémentant $n$ petit à petit jusqu'à tomber sur un code qui générera le texte demandé. \\
+Cependant un tel algorithme ne peut pas marcher à cause de la fonction \textbf{isValidProgram}. En effet, même s'il est possible de vérifier si un code contient ou non des erreurs de syntaxe, il est en revanche impossible de savoir si le programme ne se retrouvera pas coincé dans une boucle infinie (voir \textbf{halting problem} pour plus d'informations, la preuve consiste à supposer qu'il est possible de détecter les boucles infinies pour ensuite arriver à une contradiction). \\
+
+Prouvons maintenant que n'importe quel programme échouerait à la tâche de calculer la complexité de Kolmogorov d'un texte donné par l'absurde ; supposons d'abord qu'on a un tel programme et qu'il fait $X$ caractères. On peut alors écrire le code suivant à la suite de notre programme : \\
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+\Function{KolmogorovComplexity}{}
+\For{$i = n \textbf{ to } \infty$}
+\For{$\textbf{each string s of length exactly } n$}
+\If{$\textbf{KolmogorovComplexity}(s) > X+1000$}
+\State \Return $s$
+\EndIf
+\EndFor
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+Le programme est supposé générer des chaines de caractères de plus en plus longues jusqu'à ce qu'une ait une complexité supérieure à $X+1000$, ce qui existe puisque les complexité de Kolmogorov peuvent être arbitrairement longues. Cependant, ce programme comporte moins de $X+1000$ caractères et est donc une contradiction. \\
+Moins formellement, ce paradoxe utilise la même contradiction que le paradoxe de Berry : "Le plus petit entier qui ne peut pas être défini en moins de 20 mots".
+
+% \subsection{Entropie}
+
+% Mets ici si tu veux parler de l'entropie
 
 
 \end{document}
