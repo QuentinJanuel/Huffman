@@ -7,6 +7,7 @@
 \usepackage{relsize}
 \usepackage{mathtools}
 \usepackage{algorithm}
+\usepackage{graphicx}
 \usepackage[]{algpseudocode}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \let\iff\Longleftrightarrow
@@ -242,57 +243,82 @@ $$
 |m|\times \ceil[\big]{\text{log}_2|\Sigma|}
 $$
 
-\subsection{Preuve spécifique que le codage Huffman est meilleur que le naïf}
-Considérons tout d'abord un mot $m$ tel que son arbre de Huffman associé soit de profondeur maximum pour un minimum de caractères différents. C'est dans ce cas précis que nous allons essayer de montrer que le codage Huffman est plus efficace. \\
-Pour se faire, considérons un arbre à $2$ feuilles de poids $1$. La racine vaudra donc $2$. Il est possible de fusionner cet arbre avec un arbre à $1$ feuille de poids $1$ et notre nouvel arbre aura désormais une racine de poids $3$. Cependant maintenant il est impossible de fusionner cet arbre avec un arbre de poids inférieur à $2$ sinon il aurait d'abord fallu associer cet arbre avec l'arbre à $1$ feuille de poids $1$. \\
-En procédant ainsi jusqu'à obtenir un arbre $A$ à $n$ feuilles on obtient un arbre de profondeur maximale tout en minimisant l'écart entre les poids au fur et à mesure de la construction de l'arbre. \\ \\
-On constate alors que les poids des feuilles suivent la suite de Fibonacci et on a
-\begin{align*}
-\omega(A) &= \sum_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎ \\
-&= \sum_{i = 0}^{n-2} \text{Fibo}(i)+\text{Fibo}(i+1) \\
-&= \sum_{i = 0}^{n-2} \text{Fibo}(i+2) = \sum_{i = 2}^n \text{Fibo}(i)
-\end{align*}
-où $\text{Fibo}(n)$ est le $n$-ième nombre de Fibonacci et $n = |\Sigma|$. \\
-Quant à la longueur d'encodage si le codage naïf avait été utilisé à la place, on a
+\subsection{Preuve de l'optimalité du codage Huffman}
+A tout codage binaire, on entend par là un codage qui à un caractère associe une suite de $0$ et de $1$, on peut y associer un arbre binaire correspondant. \\
+Par exemple, pour ce codage : \\
+$a = 0110$ \\
+$b = 01110$ \\
+$c = 00$ \\
+$d = 1$ \\
+On peut lui associer cet arbre : \\
+\includegraphics[width=0.2\linewidth]{tree.png}
+ 
+Cet arbre binaire est construit de telle sorte que le nombre total en bits pour coder un message utilisant l'alphabet $\Sigma = \{a,\ b,\ c,\ d\}$ soit bien donné par : \\
 $$
-(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)}
+\omega(A) = \sum_{x\in \mathcal{F}_A} n_A(x)\times p(x)‎‎
 $$
 
-Prouvons par réccurence sur $n$ que l'on a toujours
+Soit $m$ un message donné, l'objectif est alors de trouver un codage tel que $\omega(A)$ soit minimal, où $A$ est l'arbre associé au codage. On dira alors qu'un tel arbre est optimal. \\
+
+\textbf{Lemme 1 :} \\
+Soit $A$ un arbre binaire, $a$ et $b$ deux feuilles de $A$. Si l'on nomme $A'$ l'arbre binaire obtenu en permutant la place de $a$ et de $b$ dans $A$, alors on obtient :
 $$
-\sum_{i = 2}^n \text{Fibo}(i) \leq (1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)}
+\omega(A')-\omega(A) = (p(a) - p(b))\times(n_A(b) - n_A(a))
 $$
-On a vérifié à l'aide de Python que la proposition est vraie jusqu'au rang $n = 5$, supposons maintenant que la propriété est vraie jusqu'au rang $n$ et vérifions si elle est vraie au rang $n+1$. \\
-Déjà, puisque la suite $\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}$ tend vers $\phi < 2$ et est croissante, alors
-$$
-\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1 \leq 3\ \forall n \in \mathbb{N*}
-$$
-De plus
-$$
-\forall n > 4,\ \ceil[\big]{\text{log}_2(n)} \geq 3
-$$
-On peut donc partir de l'inégalité
+\\
+
+\textbf{Preuve :} \\
 \begin{align*}
-&\ \frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1 \leq \ceil[\big]{\text{log}_2(n)} \\
-\implies&\ \text{Fibo}(n-1)\times(\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
-\implies&\ \text{Fibo}(n)+\text{Fibo}(n-1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
-\implies&\ \text{Fibo}(n+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
-\implies&\ \text{Fibo}(n+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
-\implies&\ B := \text{Fibo}(n+1)+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} \\
-&\leq (1+\text{Fibo}(n-1)+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} =: C
+\omega(A')-\omega(A) &= \sum_{x\in \mathcal{F}_{A'}} n_{A'}(x)\times p(x)‎‎-\sum_{x\in \mathcal{F}_A} n_A(x)\times p(x)‎‎ \\
+&= \sum_{x\in \mathcal{F}_A} n_{A'}(x)\times p(x)‎‎-\sum_{x\in \mathcal{F}_A} n_A(x)\times p(x)‎‎ \\
+&= \sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_{A'}(x)\times p(x)‎‎-\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
+&+ n_{A'}(a)\times p(a) + n_{A'}(b)\times p(b) - n_A(a)\times p(a) - n_A(b)\times p(b)
 \end{align*}
-Or on a
+
+Or, pour tout $x \in \mathcal{F}_A\backslash\{a,\ b\}$, $n_{A'}(x) = n_A(x)$ et on a \\
+$$
+n_{A'}(a) = n_{A}(b),\ n_{A'}(b) = n_{A}(a)
+$$
+
+Ainsi
 \begin{align*}
-C &= (1+\sum_{i = 0}^{n-1}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} \\
-&\leq (1+\sum_{i = 0}^{n-1}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n+1)} =: D
+\omega(A')-\omega(A) &= \sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎-\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
+&+ n_A(b)\times p(a) + n_A'(a)\times p(b) - n_A(a)\times p(a) - n_A(b)\times p(b) \\
+&= p(b)\times(n_A(a)-n_A(b)) + p(a)\times(n_A(b)-n_A(a)) \\
+&= (p(b)+p(a))\times(n_A(b)-n_A(a))
 \end{align*}
-Enfin, d'après l'hypothèse de réccurence on a
-\begin{align*}
-A :=&\ \sum_{i = 2}^{n+1} \text{Fibo}(i) \\
-=&\ \text{Fibo}(n+1)+\sum_{i = 2}^n \text{Fibo}(i) \\
-\leq&\ \text{Fibo}(n+1)+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} = B
-\end{align*}
-Au final on constate que $A \leq B \leq C \leq D \implies A \leq D$ \\
+\qed \\
+
+\textbf{Lemme 2 :} \\
+Il existe un arbre optimal tel que les deux caractères avec les plus basses fréquences ont le même parent. \\
+
+\textbf{Preuve :} \\
+Soit $A$ un arbre binaire optimal, soient $a$ et $b$ les deux caractères avec la plus basse fréquence (s'il y en a plus de deux, prenons en deux au hasard dans le lot). \\
+Si $a$ et $b$ ont le même parent, alors c'est bon. \\
+Sinon, supposons sans perte de généralité que $n_A(a) \geq n_A(b)$. \\
+Procédons alors par disjonction de cas : \\
+\textbf{1.} Il existe une feuille $c$ qui a le même parent que $a$. \\
+Alors soit $A'$ l'arbre binaire obtenu en inversant $c$ et $b$ dans $A$. \\
+$a$ et $b$ ont alors le même parent et d'après le lemme 1
+$$
+\omega(A')-\omega(A) = (p(b) - p(c))\times(n_A(c) - n_A(b))
+$$
+Comme $a$ et $b$ sont deux caractères avec la plus basse fréquence, alors
+$$
+p(b)-p(c) \leq 0
+$$
+De plus, comme $n_A(c) = n_A(a) \geq n_A(b)$, alors $n_A(c)-n_A(b) \geq 0$. \\
+Ainsi, $\omega(A')-\omega(A) \leq 0 \implies \omega(A') \leq \omega(A)$. \\
+Or on avait supposé que $A$ était un arbre optimal, c'est-à-dire que pour tout autre arbre binaire $A'$, $\omega(A) \leq \omega(A')$. \\
+Ainsi $\omega(A') = \omega(A)$. Donc $A'$ est également un arbre optimal. \\
+\textbf{2.} $a$ est un fils unique. \\
+Soit $A'$ l'arbre binaire obtenu en retirant la feuille et la branche associées à $a$ et en l'associant à son parent. \\
+Alors $\omega(A') < \omega(A)$, ce qui contredit le caractère optimal de $A$. $a$ ne peut donc pas être un fils unique. \\
+\textbf{3.} $a$ a le même parent qu'un sous arbre $B$. \\
+Auquel cas on peut distinguer deux sous cas : \\
+\textbf{3.1.} Soit toutes les feuilles de $B$ ont une fréquence minimale. \\
+On sait alors qu'il ne peut pas y avoir de feuille à fréquence minimale qui est fils unique (voir cas 2.), ce qui démontre le Lemme. \\
+\textbf{3.2.} Soit il y a au moins une feuille $c$ de $B$ qui a une fréquence supérieure à la fréquence de $a$. Or si l'on pose $A'$ l'arbre où l'on a inversé $a$ et $c$ dans $A$ on se retrouve avec $\omega(A') < \omega(A)$ ce qui contredit le caractère optimal de $A$. \\
 \qed
 
 \newpage
@@ -318,7 +344,7 @@ Après une rapide recherche dans l'OEIS, il se trouve que cette suite porte le n
 
 \newpage
 
-\section{Optimalité}
+\section{Ouverture}
 
 \subsection{Complexité de Kolmogorov}
 La complexité de Kolmogorov $K$ permet de quantifier le nombre de caractères nécessaires minimum afin de produire une chaine de texte dans un langage de programmation donné. \\
@@ -373,28 +399,62 @@ Moins formellement, ce paradoxe utilise la même contradiction que le paradoxe d
 
 % Mets ici si tu veux parler de l'entropie
 
+\newpage
+
+\section{Annexes}
+\subsection{Preuve spécifique que le codage Huffman est meilleur que le naïf}
+Cette partie est une preuve que, dans un cas particulier, le codage Huffman est meilleur. On s'est attelé à la démontrer avant de montrer que le codage Huffman était de toute façon optimal dans tous les cas. \\
+
+Considérons tout d'abord un mot $m$ tel que son arbre de Huffman associé soit de profondeur maximum pour un minimum de caractères différents. C'est dans ce cas précis que nous allons essayer de montrer que le codage Huffman est plus efficace. \\
+Pour se faire, considérons un arbre à $2$ feuilles de poids $1$. La racine vaudra donc $2$. Il est possible de fusionner cet arbre avec un arbre à $1$ feuille de poids $1$ et notre nouvel arbre aura désormais une racine de poids $3$. Cependant maintenant il est impossible de fusionner cet arbre avec un arbre de poids inférieur à $2$ sinon il aurait d'abord fallu associer cet arbre avec l'arbre à $1$ feuille de poids $1$. \\
+En procédant ainsi jusqu'à obtenir un arbre $A$ à $n$ feuilles on obtient un arbre de profondeur maximale tout en minimisant l'écart entre les poids au fur et à mesure de la construction de l'arbre. \\ \\
+On constate alors que les poids des feuilles suivent la suite de Fibonacci et on a
+\begin{align*}
+\omega(A) &= \sum_{(x_1,\ b,\ x_2)\in t(A)} p(x_2)‎‎ \\
+&= \sum_{i = 0}^{n-2} \text{Fibo}(i)+\text{Fibo}(i+1) \\
+&= \sum_{i = 0}^{n-2} \text{Fibo}(i+2) = \sum_{i = 2}^n \text{Fibo}(i)
+\end{align*}
+où $\text{Fibo}(n)$ est le $n$-ième nombre de Fibonacci et $n = |\Sigma|$. \\
+Quant à la longueur d'encodage si le codage naïf avait été utilisé à la place, on a
+$$
+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)}
+$$
+
+Prouvons par réccurence sur $n$ que l'on a toujours
+$$
+\sum_{i = 2}^n \text{Fibo}(i) \leq (1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)}
+$$
+On a vérifié à l'aide de Python que la proposition est vraie jusqu'au rang $n = 5$, supposons maintenant que la propriété est vraie jusqu'au rang $n$ et vérifions si elle est vraie au rang $n+1$. \\
+Déjà, puisque la suite $\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}$ tend vers $\phi < 2$ et est croissante, alors
+$$
+\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1 \leq 3\ \forall n \in \mathbb{N*}
+$$
+De plus
+$$
+\forall n > 4,\ \ceil[\big]{\text{log}_2(n)} \geq 3
+$$
+On peut donc partir de l'inégalité
+\begin{align*}
+&\ \frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1 \leq \ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n-1)\times(\frac{\text{Fibo}(n)}{\text{Fibo}(n-1)}+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n)+\text{Fibo}(n-1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ \text{Fibo}(n+1) \leq \text{Fibo}(n-1)\times\ceil[\big]{\text{log}_2(n)} \\
+\implies&\ B := \text{Fibo}(n+1)+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} \\
+&\leq (1+\text{Fibo}(n-1)+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} =: C
+\end{align*}
+Or on a
+\begin{align*}
+C &= (1+\sum_{i = 0}^{n-1}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} \\
+&\leq (1+\sum_{i = 0}^{n-1}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n+1)} =: D
+\end{align*}
+Enfin, d'après l'hypothèse de réccurence on a
+\begin{align*}
+A :=&\ \sum_{i = 2}^{n+1} \text{Fibo}(i) \\
+=&\ \text{Fibo}(n+1)+\sum_{i = 2}^n \text{Fibo}(i) \\
+\leq&\ \text{Fibo}(n+1)+(1+\sum_{i = 0}^{n-2}\text{Fibo}(i))\times \ceil[\big]{\text{log}_2(n)} = B
+\end{align*}
+Au final on constate que $A \leq B \leq C \leq D \implies A \leq D$ \\
+\qed
 
 \end{document}
-
-%%% A ressortir au besoin !
-% \subsection{Fonctions gauche et droite d'un arbre binaire}
-% Soit $E$ un ensemble, pour tout $b \in \mathbb{F}_2$, on pose
-% $$
-% S_b := \{A \in \mathcal{A}_E,\ \exists \ x \in q(A),\ (r(A), b, x) \in t(A)\}
-% $$
-% Cela correspond à l'ensemble des arbres binaires qui ont un sous arbre ou gauche ou droit selon la valeur de $b$. \\
-% Ensuite, $\forall A \in S_b$, soit $s_b(A)$ l'unique $x \in q(A)$ tel que $(r(A),\ b,\ x) \in t(A)$. \\
-% Finalement, on peut poser
-% $$
-% \begin{matrix}
-% \theta_b: &S_b &\rightarrow &\mathcal{A}_E \\
-% &A &\mapsto &A_b
-% \end{matrix}
-% $$
-% avec $A_b$ l'unique arbre binaire dont l'ensemble des transitions est aussi grand que possible tel que
-% \begin{gather}
-% r(A_b) = s_b(A) \\
-% t(A_b) \subset t(A)
-% \end{gather}
-% Utilisons cette fonction pour définir $g := \theta_0$ et $d := \theta_1$. \\
-% Pour synthétiser, $g$ et $d$ sont deux fonctions qui rendent le sous arbre binaire respectivement gauche ou droite, définies uniquement si ce sous arbre existe. \\
