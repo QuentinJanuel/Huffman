@@ -462,7 +462,7 @@ Pour finir, notons que nous aurions également pu traiter de l'entropie, d'autre
 Cette partie est une preuve que, dans un cas particulier, le codage Huffman est meilleur. On s'est attelé à la démontrer avant de montrer que le codage Huffman était de toute façon optimal dans tous les cas. \\
 
 Considérons tout d'abord un mot $m$ tel que son arbre de Huffman associé soit de profondeur maximum pour un minimum de caractères différents. C'est dans ce cas précis que nous allons essayer de montrer que le codage Huffman est plus efficace. \\
-Pour se faire, considérons un arbre à $2$ feuilles de poids $1$. La racine vaudra donc $2$. Il est possible de fusionner cet arbre avec un arbre à $1$ feuille de poids $1$ et notre nouvel arbre aura désormais une racine de poids $3$. Cependant maintenant il est impossible de fusionner cet arbre avec un arbre de poids inférieur à $2$ sinon il aurait d'abord fallu associer cet arbre avec l'arbre à $1$ feuille de poids $1$. \\
+Pour ce faire, considérons un arbre à $2$ feuilles de poids $1$. La racine vaudra donc $2$. Il est possible de fusionner cet arbre avec un arbre à $1$ feuille de poids $1$ et notre nouvel arbre aura désormais une racine de poids $3$. Cependant maintenant il est impossible de fusionner cet arbre avec un arbre de poids inférieur à $2$ sinon il aurait d'abord fallu associer cet arbre avec l'arbre à $1$ feuille de poids $1$. \\
 En procédant ainsi jusqu'à obtenir un arbre $A$ à $n$ feuilles on obtient un arbre de profondeur maximale tout en minimisant l'écart entre les poids au fur et à mesure de la construction de l'arbre. \\ \\
 On constate alors que les poids des feuilles suivent la suite de Fibonacci et on a
 \begin{align*}
