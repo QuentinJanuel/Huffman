@@ -342,7 +342,7 @@ Pour le cas $n = 1$, $\omega(A) = 0$, on ne peut pas faire mieux. \\
 Soit $n > 1$ tel que tout arbre de Huffman encodant un mot de taille $n-1$ soit optimal, montrons alors que tout arbre de Huffman encodant un mot de taille $n$ est optimal aussi. \\
 Soit $A$ un arbre de Huffman pour un mot $m$ de taille $n$, ainsi que $a$ et $b$ deux caractères avec la plus basse fréquence de sorte qu'ils aient le même parent $c$. \\
 Considérons alors $A'$ l'arbre de Huffman de taille $n-1$, en enlevant $a$ et $b$ et en gardant $c$. \\
-L'arbre $A'$ encode alors le mot $m'$, c'est-à-dire $m$ l'on a remplacé chaque $a$ et $b$ par $c$. \\
+L'arbre $A'$ encode alors le mot $m'$, c'est-à-dire $m$ où l'on a remplacé chaque $a$ et $b$ par $c$. \\
 Puisque $A'$ est un arbre de Huffman encodant un mot de taille $n-1$, il est alors optimal.
 \begin{align*}
 \omega(A) &= n_A(a)\times p(a) + n_A(b)\times p(b)+\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
