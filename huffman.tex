@@ -382,8 +382,8 @@ $$
 $$
 Il est possible de définir cette suite par récurrence. \\
 En effet, pour $n$ entier, un arbre à $n$ feuilles est forcément la fusion de deux arbres à $p$ et $q$ feuilles tel que $p+q = n$. \\
-Il s'agit donc la fusion de deux arbres à $p$ et $n-p$ feuilles avec $p$ inferieur ou egal à $n$.
-Il faut donc sommer de $p$ entier jusqu'à $n$ le nombre d'arbre à $p$ feuilles multiplié par le nombre d'arbre à $n-p$ feuilles.
+Il s'agit donc la fusion de deux arbres à $p$ et $n-p$ feuilles avec $p$ inférieur ou égal à $n$.
+Il faut donc sommer de $p$ entier jusqu'à $n$ le nombre d'arbres à $p$ feuilles multiplié par le nombre d'arbres à $n-p$ feuilles.
 Cela nous donne la formule suivante :
 $$
 u_n = \sum_{p = 1}^{\ceil[\big]{n/2}} u_p\times u_{n-p},\ \forall n \in \mathbb{N}^*
@@ -401,7 +401,7 @@ $$
 K(\text{Hello world}) \leq 20
 $$
 Il est très facile de montrer que pour tout langage, il existe une constante $p$ telle que pour tout texte $t$, on a $K(t) \leq |t|+p$. \\ \\
-On peut utiliser cette complexité afin de déterminer l'optimabilité de compression d'une chaine de caractères donnée, cependant cela ne correspond pas à un codage par symbole, ne remettant alors pas en cause l'optimabilité de Huffman dans son domaine. \\ \\
+On peut utiliser cette complexité afin de déterminer l'optimalité de compression d'une chaine de caractères donnée, cependant cela ne correspond pas à un codage par symbole, ne remettant alors pas en cause l'optimalité de Huffman dans son domaine. \\ \\
 Fâcheusement, il est impossible de construire une fonction calculant la complexité de Kolmogorov, même si on pourrait croire que construire un tel algorithme est possible au premier abord naïf : \\
 
 \begin{algorithm}
