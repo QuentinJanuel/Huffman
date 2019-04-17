@@ -194,7 +194,8 @@ Profitons en pour poser $h: \Sigma^* \rightarrow \overline{\mathcal{H}_\Sigma}$ 
 \newpage
 
 \section{Utilisation concrète}
-L'intérêt même des arbres de Huffman est de compresser un message. Considérons le message $m := "caba" \in\Sigma^* := {a,\ b,\ c}$ ainsi que son arbre de Huffman associé $A:=h(m)\in\overline{\mathcal{H}_\Sigma}$. Cette section a alors pour but d'expliquer comment utiliser $A$ pour encoder $m$.
+L'intérêt même des arbres de Huffman est de compresser un message. Considérons le message $m := "caba" \in\Sigma^* := {a,\ b,\ c}$ ainsi que son arbre de Huffman associé $A:=h(m)\in\overline{\mathcal{H}_\Sigma}$. Cette section a alors pour but d'expliquer comment utiliser $A$ pour encoder $m$. \\
+\includegraphics[width=\linewidth]{treecaba.png}
 
 \subsection{Encodage de l'arbre lui-même}
 Afin de pouvoir reconstituer le message, il faut tout d'abord trouver un moyen d'encoder l'arbre de Huffman du message en binaire. Cette tâche est simplifiée de par la définition d'arbre binaire donnée plus haut : supposons que l'arbre $A$ se note
@@ -213,7 +214,7 @@ $$
 On peut alors utiliser encoder l'arbre en encodant chaque caractère par un nombre en binaire. Pour séparer l'arbre du début du message il est possible de rajouter à nouveau 3 virgules à la fin de l'arbre.
 
 \textbf{Note}
-Il serait aussi possible de créer l'arbre de Huffman basé sur les fréquences d'appartition des lettres de l'alphabet dans la langue française, l'avantage étant qu'il n'y aurait alors plus besoin d'encoder l'arbre pour chaque message. Seulement la compression ne sera pas optimale et suppose la langue du message.
+Il serait aussi possible de créer l'arbre de Huffman basé sur les fréquences d'apparition des lettres de l'alphabet dans la langue française, l'avantage étant qu'il n'y aurait alors plus besoin d'encoder l'arbre pour chaque message. Seulement la compression ne sera pas optimale et suppose la langue du message.
 
 \subsection{Encodage du message en utilisant l'arbre}
 Remplaçons chaque lettre par la succession des transitions partant de la racine jusqu'à la feuille correspondante à la lettre. Une transition sera encodée par un $0$ si elle va à gauche, et par un $1$ si elle va à droite. L'algorithme de décodage ayant connaissance de l'arbre, il sait quand se termine la définition d'un caractère lorsqu'il arrive sur une feuille. \\
@@ -321,9 +322,46 @@ On sait alors qu'il ne peut pas y avoir de feuille à fréquence minimale qui es
 \textbf{3.2.} Soit il y a au moins une feuille $c$ de $B$ qui a une fréquence supérieure à la fréquence de $a$. Or si l'on pose $A'$ l'arbre où l'on a inversé $a$ et $c$ dans $A$ on se retrouve avec $\omega(A') < \omega(A)$ ce qui contredit le caractère optimal de $A$. \\
 \qed
 
+\textbf{Théorème :} \\
+Un arbre de Huffman est un arbre optimal. \\
+
+\textbf{Preuve :}
+Procédons par récurrence sur la taille du mot à coder. \\
+Pour le cas $n = 1$, $\omega(A) = 0$, on ne peut pas faire mieux. \\
+Soit $n > 1$ tel que tout arbre de Huffman encodant un mot de taille $n-1$ soit optimal, montrons alors que tout arbre de Huffman encodant un mot de taille $n$ est optimal aussi. \\
+Soit $A$ un arbre de Huffman pour un mot $m$ de taille $n$, ainsi que $a$ et $b$ deux caractères avec la plus basse fréquence de sorte qu'ils aient le même parent $c$. \\
+Considérons alors $A'$ l'arbre de Huffman de taille $n-1$, en enlevant $a$ et $b$ et en gardant $c$. \\
+L'arbre $A'$ encode alors le mot $m'$, c'est-à-dire $m$ l'on a remplacé chaque $a$ et $b$ par $c$. \\
+Puisque $A'$ est un arbre de Huffman encodant un mot de taille $n-1$, il est alors optimal.
+\begin{align*}
+\omega(A) &= n_A(a)\times p(a) + n_A(b)\times p(b)+\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
+&= (p(a)+p(b))\times(n_A(c)+1)+\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
+&= p(c)\times(n_A(c)+1)+\sum_{x\in \mathcal{F}_{A'}\backslash\{c\}} n_{A'}(x)\times p(x)‎‎ \\
+&= p(c)\times n_A(c)+p(c)+\sum_{x\in \mathcal{F}_{A'}\backslash\{c\}} n_{A'}(x)\times p(x)‎‎ \\
+&= p(c)\times n_A(c)+p(a)+p(b)+\sum_{x\in \mathcal{F}_{A'}\backslash\{c\}} n_{A'}(x)\times p(x)‎‎ \\
+&= p(a)+p(b)+\sum_{x\in \mathcal{F}_{A'}} n_{A'}(x)\times p(x)‎‎ \\
+&= p(a)+p(b)+\omega(A')
+\end{align*}
+
+D'après le Lemme 2, il existe un arbre binaire optimal $B$ encodant $m$ tel que $a$ et $b$ aient un parent commun. \\ 
+Soit $B'$ l'arbre obtenu en enlevant $a$ et $b$ de $B$. On peut alors également montrer que
+$$
+\omega(B) = p(a)+p(b)\omega(B')
+$$
+Or comme $A'$ est optimal,
+\begin{align*}
+\omega(B') \geq \omega(A') &\implies p(a)+p(b)+\omega(B') >= p(a)+p(b)+\omega(A') \\
+&\implies \omega(B) \geq \omega(A)
+\end{align*}
+Ce qui montre que $A$ est un arbre optimal. \qed \\
+
+Ainsi, le codage Huffman est le plus optimal qui soit.
+
 \newpage
 
-\section{Combinatoire}
+\section{Ouverture}
+
+\subsection{Combinatoire}
 On s'intéresse à compter le nombre d'arbres binaires complets à $n$ feuilles. \\
 On considère que deux arbres sont les mêmes si l'on peut obtenir l'un en inversant le sous arbre droit avec le sous arbre gauche dans des noeuds donnés. \\
 Pour $n = 1$, il existe un unique arbre. Pour $n = 2$ et $n = 3$, idem. Le cas de $n = 3$ est un peu plus subtil car l'on pourrait croire qu'il existe deux arbres différents mais une simple permutation des sous arbres au niveau de la racine suffit à retrouver l'autre arbre. \\
@@ -341,10 +379,6 @@ u_n = \sum_{p = 1}^{\ceil[\big]{n/2}} u_p\times u_{n-p},\ \forall n \in \mathbb{
 $$
 \\
 Après une rapide recherche dans l'OEIS, il se trouve que cette suite porte le nom de \textbf{half Catalan numbers} (ou \textbf{demi nombres de Catalan}), on voit aisément d'où vient le nom car les nombres de Catalan sont générés à partir de la même formule à l'exception que la somme va jusqu'à $n$. Malheureusement il n'existe pas de formule non récursive des demi nombres de Catalan.
-
-\newpage
-
-\section{Ouverture}
 
 \subsection{Complexité de Kolmogorov}
 La complexité de Kolmogorov $K$ permet de quantifier le nombre de caractères nécessaires minimum afin de produire une chaine de texte dans un langage de programmation donné. \\
@@ -391,7 +425,7 @@ Prouvons maintenant que n'importe quel programme échouerait à la tâche de cal
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
-
+\newpage
 Le programme est supposé générer des chaines de caractères de plus en plus longues jusqu'à ce qu'une ait une complexité supérieure à $X+1000$, ce qui existe puisque les complexité de Kolmogorov peuvent être arbitrairement longues. Cependant, ce programme comporte moins de $X+1000$ caractères et est donc une contradiction. \\
 Moins formellement, ce paradoxe utilise la même contradiction que le paradoxe de Berry : "Le plus petit entier qui ne peut pas être défini en moins de 20 mots".
 
