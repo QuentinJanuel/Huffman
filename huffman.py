@@ -1,4 +1,4 @@
-# Implémentation des arbres
+# Implementation des arbres
 class Arbre:
 	def __init__(self, lettre=None, occurences=None):
 		self.gauche  = None
@@ -6,10 +6,10 @@ class Arbre:
 		self.lettre = lettre
 		self.occurences = occurences
 
-# Texte à compresser
+# Texte a compresser
 texte = """
-On peut ici s'amuser à remplir un long texte,
-ce n'est pas un problème.
+On peut ici s'amuser a remplir un long texte,
+ce n'est pas un probleme.
 Notre algorithme le compresse parfaitement bien
 """
 
@@ -19,7 +19,7 @@ arbres = []
 # Remplissage des arbres
 texte_temporaire = texte
 while len(texte_temporaire) > 0:
-	# On récupère la première lettre
+	# On recupere la premiere lettre
 	lettre = texte_temporaire[0]
 	# On compte le nombre de fois qu'elle est dans le texte
 	occurences = texte_temporaire.count(lettre)
@@ -32,23 +32,24 @@ while len(texte_temporaire) > 0:
 def ordre(arbre):
 	return arbre.occurences
 
-# On répète jusqu'à ce qu'il ne reste plus qu'un arbre
+# On repete jusqu'a ce qu'il ne reste plus qu'un arbre
 while len(arbres) > 1:
-	# On trie les arbres en mettant les arbres les plus fréquentes au début
+	# On trie les arbres en mettant les arbres
+	# les plus frequentes au debut
 	arbres.sort(key=ordre, reverse=True)
-	# On récupère les deux derniers arbres (donc les moins fréquents)
+	# On recupere les deux derniers arbres
 	arbre1 = arbres.pop()
 	arbre2 = arbres.pop()
-	# On compte les occurences cumulées des deux
+	# On compte les occurences cumulees des deux
 	occurences = arbre1.occurences+arbre2.occurences
-	# On crée un arbre qui sera la composition des deux sous arbres
+	# On cree un arbre qui sera la composition des deux sous arbres
 	arbre = Arbre("", occurences)
 	arbre.gauche = arbre1
 	arbre.droite = arbre2
 	# On le rajoute dans la liste
 	arbres.append(arbre)
 
-# On a créé notre arbre en fonction du texte :
+# On a cree notre arbre en fonction du texte :
 # c'est le seul qui reste dans notre liste d'arbres
 arbre = arbres[0]
 
@@ -60,30 +61,31 @@ def codeLettreArbre(lettre, arbre):
 	# Si la lettre est la bonne, c'est possible
 	if arbre.lettre == lettre:
 		return ("", True)
-	# On calcule récursivement le code du sous arbre gauche
+	# On calcule recursivement le code du sous arbre gauche
 	# et celui du sous arbre droit
 	gauche = codeLettreArbre(lettre, arbre.gauche)
 	droite = codeLettreArbre(lettre, arbre.droite)
-	# Si c'est possible à gauche,
+	# Si c'est possible a gauche,
 	# on rend un 0 suivi du reste du code en partant de la gauche
 	if gauche[1]:
 		return ("0"+gauche[0], True)
-	# Si c'est possible à droite,
+	# Si c'est possible a droite,
 	# on rend un 1 suivi du reste du code en partant de la droite
 	if droite[1]:
 		return ("1"+droite[0], True)
-	# Si ce n'est ni possible à droite ni à gauche, ce n'est pas possible
+	# Si ce n'est possible ni a droite ni a gauche
+	# ce n'est pas possible
 	return ("", False)
 
 # Creation du code
 code = ""
 texte_temporaire = texte
 while len(texte_temporaire) > 0:
-	# On récupère la première lettre
+	# On recupere la premiere lettre
 	lettre = texte_temporaire[0]
 	# On la supprime du texte
 	texte_temporaire = texte_temporaire[1:]
-	# On récupère le code de cette lettre
+	# On recupere le code de cette lettre
 	lettre_code = codeLettreArbre(lettre, arbre)
 	# On ajoute son code au code total
 	code += lettre_code[0]

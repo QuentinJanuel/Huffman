@@ -8,10 +8,15 @@
 \usepackage{mathtools}
 \usepackage{algorithm}
 \usepackage{graphicx}
+\usepackage{listings}
 \usepackage[]{algpseudocode}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \let\iff\Longleftrightarrow
 \let\qed\square
+\lstset{
+	language=Python,
+	tabsize=2
+}
 \newtheorem{theo}{Théorème}
 \pagestyle{headings}
 \title{Huffman}
@@ -490,5 +495,9 @@ A :=&\ \sum_{i = 2}^{n+1} \text{Fibo}(i) \\
 \end{align*}
 Au final on constate que $A \leq B \leq C \leq D \implies A \leq D$ \\
 \qed
+
+\subsection{Code Python}
+Nous avions commencé par codé un script Python qui encodait un texte en binaire en utilisant le codage Huffman. \\
+\lstinputlisting{huffman.py}
 
 \end{document}
