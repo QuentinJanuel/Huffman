@@ -188,16 +188,16 @@ $$
 Pour tout mot de $\Sigma$, l'arbre de Huffman associé est unique dans $\overline{\mathcal{H}_\Sigma}$. \\
 \textbf{Preuve :} \\
 Prenons un mot de $\Sigma^*$, l'algorithme de Huffman nous dit de considérer l'ensemble des arbres de Huffman de la forme$(\{(a,\ n)\},\ \emptyset)$ avec $a$ les lettres du mot et $n$ leur nombre d'occurrences. \\
-Ensuite, étant donné un ensemble de $n$ arbres, il faut considérer l'ensemble de $n-1$ arbres où l'on a fusionné les deux arbres dont les poids des racines sont minimum, et ce jusqu'à ne se retrouver qu'avec un seul arbre. \\
+Ensuite, étant donné un ensemble de $n$ arbres, il faut considérer l'ensemble de $n-1$ arbres où l'on a fusionné les deux arbres dont les poids des racines sont minimums, et ce jusqu'à ne se retrouver qu'avec un seul arbre. \\
 Or ces arbres ne sont pas forcément uniques et de plus $m(A,\ B) \neq m(B,\ A)$. \\ \\
 Observons ce que devient la somme des longueurs d'encodage $\omega$ d'un ensemble d'arbres $X$ après une itération de l'algorithme. \\
-Soient $A$ et $B$ deux arbres de $X$ dont les poids des racines sont minimum. La nouvelle liste sera donc $Y := X\backslash\{A,\ B\}\cup\{m(A,\ B)\}$.
+Soient $A$ et $B$ deux arbres de $X$ dont les poids des racines sont minimums. La nouvelle liste sera donc $Y := X\backslash\{A,\ B\}\cup\{m(A,\ B)\}$.
 \begin{align*}
 \sum_{C\in Y} \omega(C) &= \omega\circ m(A,\ B)+\sum_{C\in X\backslash\{A,\ B\}} \omega(C) \\
 &= \omega(A)+\omega(B)+p\circ r(A)+p\circ r(B)+\sum_{C\in X\backslash\{A,\ B\}} \omega(C) \\
 &= p\circ r(A)+p\circ r(B)+\sum_{C\in X} \omega(C)
 \end{align*}
-On constate que la somme des poids a augmenté de $p\circ r(A)+p\circ r(B)$ ce qui est indépendant de l'ordre de la fusion entre $A$ et $B$ ainsi que le choix des arbres aux poids minimum parmi tous les arbres de l'ensemble. \\ \\
+On constate que la somme des poids a augmenté de $p\circ r(A)+p\circ r(B)$ ce qui est indépendant de l'ordre de la fusion entre $A$ et $B$ ainsi que le choix des arbres aux poids minimums parmi tous les arbres de l'ensemble. \\ \\
 Ainsi si l'algorithme a donné pour un mot $m$ deux arbres $A$ et $B$ différents, on aura quand même $\omega(A) = \omega(B) \iff A\mathcal{R}B$ ce qui montre qu'ils appartiennent à la même classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$. $\qed$ \\ \\
 Profitons en pour poser $h: \Sigma^* \rightarrow \overline{\mathcal{H}_\Sigma}$ la fonction qui à un mot de $\Sigma$ y associe la classe d'équivalence dans $\overline{\mathcal{H}_\Sigma}$ des arbres de Huffman construits par l'algorithme.
 
