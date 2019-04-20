@@ -103,9 +103,6 @@ m: &\mathcal{H}_\Sigma\times \mathcal{H}_\Sigma &\rightarrow &\mathcal{H}_\Sigma
 \end{matrix}
 $$
 
-\textbf{Note :} \\
-Cette partie des arbres binaires est en fait trop grande car elle prend en considération des arbres qui ne peuvent pas être amenés à être créés par l'algorithme (exemple $(\{1\},\ \{2\})$)
-
 \subsection{Proposition 1}
 Pour tout alphabet $\Sigma$, on a $\mathcal{H}_\Sigma \subset \mathcal{A}_{\Sigma^*\times \mathbb{N}}$. \\
 \textbf{Preuve :} \\
@@ -204,7 +201,7 @@ Profitons en pour poser $h: \Sigma^* \rightarrow \overline{\mathcal{H}_\Sigma}$ 
 \newpage
 
 \section{Utilisation concrète}
-L'intérêt même des arbres de Huffman est de compresser un message. Considérons le message $m := "caba" \in\Sigma^* := {a,\ b,\ c}$ ainsi que son arbre de Huffman associé $A:=h(m)\in\overline{\mathcal{H}_\Sigma}$. Cette section a alors pour but d'expliquer comment utiliser $A$ pour encoder $m$. \\
+L'intérêt même des arbres de Huffman est de compresser un message. Considérons le message $m := "caba" \in\Sigma^* := \{a,\ b,\ c\}$ ainsi que son arbre de Huffman associé $A:=h(m)\in\overline{\mathcal{H}_\Sigma}$. Cette section a alors pour but d'expliquer comment utiliser $A$ pour encoder $m$. \\
 \includegraphics[width=\linewidth]{treecaba.png}
 
 \subsection{Encodage de l'arbre lui-même}
@@ -294,9 +291,9 @@ $$
 Ainsi
 \begin{align*}
 \omega(A')-\omega(A) &= \sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎-\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
-&+ n_A(b)\times p(a) + n_A'(a)\times p(b) - n_A(a)\times p(a) - n_A(b)\times p(b) \\
+&+ n_A(b)\times p(a) + n_A(a)\times p(b) - n_A(a)\times p(a) - n_A(b)\times p(b) \\
 &= p(b)\times(n_A(a)-n_A(b)) + p(a)\times(n_A(b)-n_A(a)) \\
-&= (p(b)+p(a))\times(n_A(b)-n_A(a))
+&= (p(a)-p(b))\times(n_A(b)-n_A(a))
 \end{align*}
 \qed \\
 
@@ -337,13 +334,13 @@ On sait alors qu'il ne peut pas y avoir de feuille à fréquence minimale qui es
 Un arbre de Huffman est un arbre optimal. \\
 
 \textbf{Preuve :}
-Procédons par récurrence sur la taille du mot à coder. \\
+Procédons par récurrence sur la taille de l'alphabet. \\
 Pour le cas $n = 1$, $\omega(A) = 0$, on ne peut pas faire mieux. \\
-Soit $n > 1$ tel que tout arbre de Huffman encodant un mot de taille $n-1$ soit optimal, montrons alors que tout arbre de Huffman encodant un mot de taille $n$ est optimal aussi. \\
-Soit $A$ un arbre de Huffman pour un mot $m$ de taille $n$, ainsi que $a$ et $b$ deux caractères avec la plus basse fréquence de sorte qu'ils aient le même parent $c$. \\
+Soit $n > 1$ tel que tout arbre de Huffman encodant un mot d'un alphabet de taille $n-1$ soit optimal, montrons alors que tout arbre de Huffman encodant un mot d'un alphabet de taille $n$ est optimal aussi. \\
+Soit $A$ un arbre de Huffman pour un mot $m$ d'un alphabet de taille $n$, ainsi que $a$ et $b$ deux caractères avec la plus basse fréquence de sorte qu'ils aient le même parent $c$. \\
 Considérons alors $A'$ l'arbre de Huffman de taille $n-1$, en enlevant $a$ et $b$ et en gardant $c$. \\
-L'arbre $A'$ encode alors le mot $m'$, c'est-à-dire $m$ où l'on a remplacé chaque $a$ et $b$ par $c$. \\
-Puisque $A'$ est un arbre de Huffman encodant un mot de taille $n-1$, il est alors optimal.
+L'arbre $A'$ encode alors le mot $m'$, c'est-à-dire $m$ où l'on a remplacé chaque $a$ et $b$ par $c$, appartenant donc à un alphabet de taille $n-1$. \\
+Puisque $A'$ est un arbre de Huffman encodant un mot d'un alphabet de taille $n-1$, il est alors optimal.
 \begin{align*}
 \omega(A) &= n_A(a)\times p(a) + n_A(b)\times p(b)+\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
 &= (p(a)+p(b))\times(n_A(c)+1)+\sum_{x\in \mathcal{F}_A\backslash\{a,\ b\}} n_A(x)\times p(x)‎‎ \\
@@ -357,11 +354,11 @@ Puisque $A'$ est un arbre de Huffman encodant un mot de taille $n-1$, il est alo
 D'après le Lemme 2, il existe un arbre binaire optimal $B$ encodant $m$ tel que $a$ et $b$ aient un parent commun. \\ 
 Soit $B'$ l'arbre obtenu en enlevant $a$ et $b$ de $B$. On peut alors également montrer que
 $$
-\omega(B) = p(a)+p(b)\omega(B')
+\omega(B) = p(a)+p(b)+\omega(B')
 $$
 Or comme $A'$ est optimal,
 \begin{align*}
-\omega(B') \geq \omega(A') &\implies p(a)+p(b)+\omega(B') >= p(a)+p(b)+\omega(A') \\
+\omega(B') \geq \omega(A') &\implies p(a)+p(b)+\omega(B') \geq p(a)+p(b)+\omega(A') \\
 &\implies \omega(B) \geq \omega(A)
 \end{align*}
 Ce qui montre que $A$ est un arbre optimal. \qed \\
@@ -514,7 +511,7 @@ Au final on constate que $A \leq B \leq C \leq D \implies A \leq D$ \\
 \qed
 
 \subsection{Code Python}
-Nous avions commencé par codé un script Python qui encodait un texte en binaire en utilisant le codage Huffman. \\
+Nous avions commencé par coder un script Python qui encodait un texte en binaire en utilisant le codage Huffman. \\
 \lstinputlisting{huffman.py}
 
 \end{document}
